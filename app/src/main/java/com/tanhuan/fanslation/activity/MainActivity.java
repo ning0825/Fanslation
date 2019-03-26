@@ -1,31 +1,31 @@
 package com.tanhuan.fanslation.activity;
 
 import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
-import android.support.design.widget.BottomSheetDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AnimationSet;
 import android.view.animation.AnimationUtils;
-import android.view.animation.AnticipateOvershootInterpolator;
-import android.view.animation.OvershootInterpolator;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.tanhuan.fanslation.MtoCView;
 import com.tanhuan.fanslation.R;
+import com.tanhuan.fanslation.util.ViewUtil;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "----MainActivity----";
@@ -38,6 +38,13 @@ public class MainActivity extends AppCompatActivity {
     ListView lvMenu;
     ConstraintLayout clDialog;
     View bgMenu;
+    MtoCView btMenu;
+
+    ValueAnimator flAnimator;
+    ObjectAnimator bgMenuAnimator;
+    ObjectAnimator clMenuAnimator;
+
+    int ANIM_DURATION = 300;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,46 +56,84 @@ public class MainActivity extends AppCompatActivity {
         clDialog = findViewById(R.id.cl_dialog);
         lvMenu = clDialog.findViewById(R.id.lv_more);
         bgMenu = findViewById(R.id.bg_meau);
+        btMenu = findViewById(R.id.bt_menu);
 
         String[] menus = {"test1", "test2", "test3", "test4"};
-        lvMenu.setAdapter(new MoreAdapter(this, R.layout.item_more, menus));
+        MoreAdapter moreAdapter = new MoreAdapter(this, R.layout.item_more, menus);
+        lvMenu.setAdapter(moreAdapter);
 
         myClickListener = new MyClickListener();
         etInput.setOnClickListener(myClickListener);
-        flMenu.setOnClickListener(myClickListener);
         bgMenu.setOnClickListener(myClickListener);
+        btMenu.setOnClickListener(myClickListener);
 
-        clDialog.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+        animatorInit();
+    }
+
+    private void animatorInit() {
+
+        flAnimator = ValueAnimator.ofFloat(ViewUtil.dp2px(this, 60), 1000);
+        bgMenuAnimator = ObjectAnimator.ofFloat(bgMenu, View.ALPHA, 0, 0.3f);
+        clMenuAnimator = ObjectAnimator.ofFloat(clDialog, View.ALPHA, 0,1);
+
+        flAnimator.setDuration(ANIM_DURATION);
+        bgMenuAnimator.setDuration(ANIM_DURATION);
+        clMenuAnimator.setDuration(ANIM_DURATION);
+
+        flAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
+
+
+        bgMenuAnimator.addListener(new AnimatorListenerAdapter() {
             @Override
-            public void onGlobalLayout() {
-                Log.e(TAG, "onGlobalLayout: " + clDialog.getHeight());
+            public void onAnimationStart(Animator animation, boolean isReverse) {
+                if (isReverse) {
+                    bgMenu.setClickable(false);
+                } else {
+                    bgMenu.setVisibility(View.VISIBLE);
+                    flMenu.setClickable(false);
+                    bgMenu.setClickable(false);
+                }
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation, boolean isReverse) {
+                if (isReverse) {
+                    bgMenu.setVisibility(View.GONE);
+                    flMenu.setClickable(true);
+                    bgMenu.setClickable(true);
+                } else {
+                    bgMenu.setClickable(true);
+                }
             }
         });
+
+        ViewGroup.LayoutParams params = flMenu.getLayoutParams();
+
+        flAnimator.addUpdateListener((animation -> {
+            params.width = ((Number) animation.getAnimatedValue()).intValue();
+            params.height = ((Number) animation.getAnimatedValue()).intValue();
+            flMenu.setLayoutParams(params);
+        }));
     }
 
     /*
     * Click listener*/
     class MyClickListener implements View.OnClickListener {
-        ValueAnimator animator = ValueAnimator.ofFloat(200, 1000);
+
         @Override
         public void onClick(View v) {
             switch (v.getId()) {
-                case R.id.fl_menu:
-                    //show menu background
-                    bgMenu.setVisibility(View.VISIBLE);
-                    bgMenu.animate().alpha(0.3f).setDuration(500).start();
-                    //show menu
-                    animator.removeAllListeners();
-                    ViewGroup.LayoutParams params = flMenu.getLayoutParams();
-                    animator.addUpdateListener((animation -> {
-                        Log.e(TAG, "onAnimationUpdate: " + animation.getAnimatedValue() );
-                        params.width = ((Number) animation.getAnimatedValue()).intValue();
-                        params.height = ((Number) animation.getAnimatedValue()).intValue();
-                        flMenu.setLayoutParams(params);
-                    }));
-                    animator.setDuration(300);
-                    animator.setInterpolator(new AccelerateDecelerateInterpolator());
-                    animator.start();
+                case R.id.bt_menu:
+                    Log.e("btmenu", "onClick: " );
+                    if (!btMenu.checked) {
+                        bgMenuAnimator.reverse();
+                        flAnimator.reverse();
+                        clMenuAnimator.reverse();
+                    } else {
+                        flAnimator.start();
+                        bgMenuAnimator.start();
+                        clMenuAnimator.start();
+                    }
                     break;
                 case R.id.et_input:
                     startActivity(new Intent(MainActivity.this, SearchActivity.class ));
@@ -96,10 +141,10 @@ public class MainActivity extends AppCompatActivity {
                     etInput.startAnimation(animation);
                     break;
                 case R.id.bg_meau:
-                    //show menu background
-                    bgMenu.animate().alpha(0).setDuration(500).start();
-                    //show menu
-                    animator.reverse();
+                    bgMenuAnimator.reverse();
+                    flAnimator.reverse();
+                    btMenu.setChecked(false);
+                    clMenuAnimator.reverse();
                     break;
                 default:
                     break;
@@ -109,7 +154,7 @@ public class MainActivity extends AppCompatActivity {
 
     /*
     * Menu list adapter*/
-    class MoreAdapter extends ArrayAdapter {
+    static class MoreAdapter extends ArrayAdapter {
         int resourceId;
         String[] moreOp;
 

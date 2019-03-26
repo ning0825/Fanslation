@@ -39,18 +39,7 @@ public class SearchActivity extends AppCompatActivity implements IView<AssocBean
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
         setContentView(R.layout.activity_search);
-
-
-
-        //进出动画
-        getWindow().setExitTransition(new Slide(Gravity.TOP));
-        getWindow().setReenterTransition(new Slide(Gravity.TOP));
-        getWindow().setEnterTransition(new Explode());
-        getWindow().setReturnTransition(new Explode());
-
-
 
         btSubmit = findViewById(R.id.bt_submit);
         etInputSearch = findViewById(R.id.et_input_search);
@@ -85,7 +74,7 @@ public class SearchActivity extends AppCompatActivity implements IView<AssocBean
         lvAssoc.setOnItemClickListener((parent, view, position, id) -> {
             Intent intent = new Intent(SearchActivity.this, DetailActivity.class);
             intent.putExtra("key", keyList.get(position));
-            startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this).toBundle());
+            startActivity(intent);
         });
     }
 

@@ -1,7 +1,5 @@
 package com.tanhuan.fanslation.entity;
 
-import android.os.Build;
-
 import io.objectbox.annotation.Entity;
 import io.objectbox.annotation.Id;
 
@@ -11,5 +9,5 @@ public class ParaEntity {
 
     String input;
 
-
+    String examType;
 }
