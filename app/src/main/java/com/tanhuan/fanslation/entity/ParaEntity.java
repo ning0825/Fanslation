@@ -9,5 +9,11 @@ public class ParaEntity {
 
     String input;
 
+    String phone;
+
     String examType;
+
+    String trans;
+
+    String sentences;
 }

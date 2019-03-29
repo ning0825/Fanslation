@@ -61,11 +61,8 @@ public class DetailActivity extends AppCompatActivity implements IView<ParaBean>
 
     class VpAdater extends FragmentPagerAdapter {
 
-        List<Fragment> fragments;
-
-        VpAdater(FragmentManager fm, List<Fragment> fragments) {
-            super(fm);
-            this.fragments = fragments;
+        VpAdater(FragmentManager fm) {
+            super(fm);;
         }
 
         @Override
@@ -108,7 +105,7 @@ public class DetailActivity extends AppCompatActivity implements IView<ParaBean>
             fragments.add(fragment1);
         }
 
-        VpAdater vpAdater = new VpAdater(getSupportFragmentManager(), fragments);
+        VpAdater vpAdater = new VpAdater(getSupportFragmentManager());
         vpDetail.setAdapter(vpAdater);
         tbDetail.setupWithViewPager(vpDetail);
     }
