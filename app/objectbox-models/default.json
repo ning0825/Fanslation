@@ -4,24 +4,8 @@
   "_note3": "If you have VCS merge conflicts, you must resolve them according to ObjectBox docs.",
   "entities": [
     {
-      "id": "1:3833914761319018868",
-      "lastPropertyId": "2:7365485032226774393",
-      "name": "User",
-      "properties": [
-        {
-          "id": "1:8694715341288307261",
-          "name": "id"
-        },
-        {
-          "id": "2:7365485032226774393",
-          "name": "name"
-        }
-      ],
-      "relations": []
-    },
-    {
       "id": "2:2114407652306060805",
-      "lastPropertyId": "5:8528242327824855449",
+      "lastPropertyId": "6:5858857789104892442",
       "name": "ParaEntity",
       "properties": [
         {
@@ -43,20 +27,69 @@
         {
           "id": "5:8528242327824855449",
           "name": "phone"
+        },
+        {
+          "id": "6:5858857789104892442",
+          "name": "trans"
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "3:4686470547489763927",
+      "lastPropertyId": "8:8312128707548012718",
+      "name": "ImageEntity",
+      "properties": [
+        {
+          "id": "1:8139195801860438839",
+          "name": "id"
+        },
+        {
+          "id": "2:9178365182472723028",
+          "name": "tts"
+        },
+        {
+          "id": "3:5050494907680648723",
+          "name": "content"
+        },
+        {
+          "id": "4:8429139476738079563",
+          "name": "note"
+        },
+        {
+          "id": "5:8490671663151260287",
+          "name": "picture"
+        },
+        {
+          "id": "6:7287690977699617535",
+          "name": "picture1"
+        },
+        {
+          "id": "7:673391939478968997",
+          "name": "dateline"
+        },
+        {
+          "id": "8:8312128707548012718",
+          "name": "fenxiangImg"
         }
       ],
       "relations": []
     }
   ],
-  "lastEntityId": "2:2114407652306060805",
+  "lastEntityId": "3:4686470547489763927",
   "lastIndexId": "0:0",
   "lastRelationId": "0:0",
   "lastSequenceId": "0:0",
   "modelVersion": 4,
   "modelVersionParserMinimum": 4,
-  "retiredEntityUids": [],
+  "retiredEntityUids": [
+    3833914761319018868
+  ],
   "retiredIndexUids": [],
-  "retiredPropertyUids": [],
+  "retiredPropertyUids": [
+    8694715341288307261,
+    7365485032226774393
+  ],
   "retiredRelationUids": [],
   "version": 1
 }

@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.MainActivity">
+    tools:context=".activity.MainActivity"
+    android:padding="16dp">
 
     <TextView
         android:id="@+id/title"
@@ -28,9 +29,7 @@
         android:id="@+id/et_input"
         android:layout_width="match_parent"
         android:layout_height="55dp"
-        android:layout_marginStart="16dp"
         android:layout_marginTop="72dp"
-        android:layout_marginEnd="16dp"
         android:background="@drawable/bg_input"
         android:padding="10dp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -40,13 +39,51 @@
         android:transitionName="search"
         android:focusable="false"/>
 
-    <include
-        layout="@layout/include_books"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+    <!--<include-->
+        <!--android:id="@+id/include_book"-->
+        <!--layout="@layout/include_books"-->
+        <!--android:layout_marginTop="8dp"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--app:layout_constraintLeft_toLeftOf="parent"-->
+        <!--app:layout_constraintTop_toBottomOf="@id/et_input" />-->
+
+    <TextView
+        android:id="@+id/include_book"
+        android:layout_width="100dp"
+        android:layout_height="150dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/colorAccent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/et_input" />
+        app:layout_constraintTop_toBottomOf="@id/et_input"/>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginLeft="16dp"
+        android:background="@color/yello"
+        android:padding="10dp"
+        android:gravity="center"
+        app:layout_constraintLeft_toRightOf="@id/include_book"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/include_book"
+        app:layout_constraintBottom_toBottomOf="@id/include_book"
+        android:orientation="vertical">
+
+        <TextView
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:textSize="16dp"
+            android:id="@+id/tv_image_en"
+            android:text="If you wish to succeed, you should use persistence as your good friend, experience as your reference, prudence as your brother and hope as your sentry."
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <TextView
+            android:id="@+id/tv_image_cn"
+            android:text="如果你希望成功，当以恒心为良友，以经验为参谋，以谨慎为兄弟，以希望为哨兵。"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
 
     <View
         android:id="@+id/bg_meau"
@@ -62,9 +99,7 @@
         android:layout_width="60dp"
         android:layout_height="60dp"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="16dp"
-        android:layout_marginRight="16dp">
+        app:layout_constraintBottom_toBottomOf="parent">
 
         <include layout="@layout/dialog_more"/>
 

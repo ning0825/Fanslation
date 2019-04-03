@@ -108,6 +108,7 @@ public class MtoCView extends View {
                     bottomLine[3] = height - topLine[3];
 
                     postInvalidate();
+                    Log.e(TAG, "onAnimationUpdate: "+ f );
                 }
             });
             valueAnimator.setDuration(500);

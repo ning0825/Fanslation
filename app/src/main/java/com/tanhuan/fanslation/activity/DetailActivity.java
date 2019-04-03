@@ -108,5 +108,7 @@ public class DetailActivity extends AppCompatActivity implements IView<ParaBean>
         VpAdater vpAdater = new VpAdater(getSupportFragmentManager());
         vpDetail.setAdapter(vpAdater);
         tbDetail.setupWithViewPager(vpDetail);
+
+        paraPresenter.save(paraBean, this);
     }
 }

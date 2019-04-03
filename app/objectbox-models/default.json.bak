@@ -4,24 +4,8 @@
   "_note3": "If you have VCS merge conflicts, you must resolve them according to ObjectBox docs.",
   "entities": [
     {
-      "id": "1:3833914761319018868",
-      "lastPropertyId": "2:7365485032226774393",
-      "name": "User",
-      "properties": [
-        {
-          "id": "1:8694715341288307261",
-          "name": "id"
-        },
-        {
-          "id": "2:7365485032226774393",
-          "name": "name"
-        }
-      ],
-      "relations": []
-    },
-    {
       "id": "2:2114407652306060805",
-      "lastPropertyId": "4:4606194057790486488",
+      "lastPropertyId": "6:5858857789104892442",
       "name": "ParaEntity",
       "properties": [
         {
@@ -39,6 +23,14 @@
         {
           "id": "4:4606194057790486488",
           "name": "sentences"
+        },
+        {
+          "id": "5:8528242327824855449",
+          "name": "phone"
+        },
+        {
+          "id": "6:5858857789104892442",
+          "name": "trans"
         }
       ],
       "relations": []
@@ -50,9 +42,14 @@
   "lastSequenceId": "0:0",
   "modelVersion": 4,
   "modelVersionParserMinimum": 4,
-  "retiredEntityUids": [],
+  "retiredEntityUids": [
+    3833914761319018868
+  ],
   "retiredIndexUids": [],
-  "retiredPropertyUids": [],
+  "retiredPropertyUids": [
+    8694715341288307261,
+    7365485032226774393
+  ],
   "retiredRelationUids": [],
   "version": 1
 }

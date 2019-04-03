@@ -44,8 +44,8 @@ public class CollinsFragment extends Fragment {
         List<ParaBean.CollinsBean.CollinsEntriesBean.EntriesBean.EntryBean> entryBeanList;
 
         ClsAdapter(Context context, int resId, List<ParaBean.CollinsBean.CollinsEntriesBean.EntriesBean.EntryBean> entryBeanList) {
-            //todo: super(context, resId) 也可以？
-            super(context, resId, entryBeanList);
+            //todo: super(context, resId) 也可以？ //也可以
+            super(context, resId);
             this.resId = resId;
             this.entryBeanList = entryBeanList;
         }
