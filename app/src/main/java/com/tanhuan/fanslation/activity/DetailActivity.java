@@ -1,6 +1,8 @@
 package com.tanhuan.fanslation.activity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
@@ -23,6 +25,7 @@ import com.tanhuan.fanslation.R;
 import com.tanhuan.fanslation.bean.ParaBean;
 import com.tanhuan.fanslation.mvp.IView;
 import com.tanhuan.fanslation.mvp.ParaPresenter;
+import com.tanhuan.fanslation.util.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +42,8 @@ public class DetailActivity extends AppCompatActivity implements IView<ParaBean>
     ViewPager vpDetail;
     List<Fragment> fragments;
 
+    SharedPreferences sp;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,6 +55,8 @@ public class DetailActivity extends AppCompatActivity implements IView<ParaBean>
         paraPresenter = new ParaPresenter(this);
         tvKey = findViewById(R.id.tv_key);
         tvPhone = findViewById(R.id.tv_phone);
+
+        sp = getSharedPreferences(Constants.SP_NAME, Context.MODE_PRIVATE);
 
         Intent intent = getIntent();
         if (intent != null) {
@@ -109,6 +116,10 @@ public class DetailActivity extends AppCompatActivity implements IView<ParaBean>
         vpDetail.setAdapter(vpAdater);
         tbDetail.setupWithViewPager(vpDetail);
 
-        paraPresenter.save(paraBean, this);
+        paraPresenter.save(paraBean, ,this);
+    }
+
+    void save(ParaBean paraBean) {
+
     }
 }

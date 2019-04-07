@@ -1,13 +1,11 @@
 package com.tanhuan.fanslation;
-import android.app.Application
-;
+
+import android.app.Application;
 import android.util.Log;
-import android.view.View;
 
 import com.tanhuan.fanslation.entity.MyObjectBox;
 
 import io.objectbox.BoxStore;
-import io.objectbox.BoxStoreBuilder;
 import io.objectbox.android.AndroidObjectBrowser;
 
 public class BaseApp extends Application {

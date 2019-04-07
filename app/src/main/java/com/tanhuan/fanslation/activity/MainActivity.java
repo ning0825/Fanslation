@@ -6,6 +6,7 @@ import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
@@ -24,17 +25,24 @@ import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.tanhuan.fanslation.BaseApp;
 import com.tanhuan.fanslation.MtoCView;
 import com.tanhuan.fanslation.R;
 import com.tanhuan.fanslation.bean.ImageBean;
+import com.tanhuan.fanslation.entity.BookEntity;
 import com.tanhuan.fanslation.mvp.IView;
 import com.tanhuan.fanslation.mvp.ImagePresenter;
+import com.tanhuan.fanslation.util.Constants;
 import com.tanhuan.fanslation.util.ViewUtil;
 
 import java.text.FieldPosition;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
+
+import io.objectbox.Box;
+import io.objectbox.BoxStore;
 
 public class MainActivity extends AppCompatActivity implements IView<ImageBean> {
     private static final String TAG = "----MainActivity----";
@@ -67,6 +75,11 @@ public class MainActivity extends AppCompatActivity implements IView<ImageBean> 
     TextView tvImageEn;
     TextView tvImageCn;
 
+    BoxStore store;
+    Box<BookEntity> bookBox;
+
+    SharedPreferences sp;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,6 +93,11 @@ public class MainActivity extends AppCompatActivity implements IView<ImageBean> 
         tvImageEn = findViewById(R.id.tv_image_en);
         tvImageCn = findViewById(R.id.tv_image_cn);
 
+        store = BaseApp.getBoxStore();
+        bookBox = store.boxFor(BookEntity.class);
+
+        sp = getSharedPreferences(Constants.SP_NAME, Context.MODE_PRIVATE);
+
         myClickListener = new MyClickListener();
         etInput.setOnClickListener(myClickListener);
         //点击菜单外部缩小菜单
@@ -90,6 +108,18 @@ public class MainActivity extends AppCompatActivity implements IView<ImageBean> 
         animatorInit();
 
         imagePresenter = new ImagePresenter(this);
+
+        boxInit();
+    }
+
+    private void boxInit() {
+        //如果 bookBox 中没数据，新建一本书, 通常是安装后第一次打开程序时
+        if (bookBox.isEmpty()) {
+            BookEntity bookEntity = new BookEntity("defaultBook");
+            long id = bookBox.put(bookEntity);
+            sp.edit().putLong(Constants.SP_DEFAULT_BOOK_ID, id).apply();
+            Log.e(TAG, "boxInit: " + "save default book to box");
+        }
     }
 
     @Override
@@ -101,7 +131,7 @@ public class MainActivity extends AppCompatActivity implements IView<ImageBean> 
     /*
     显示每日一句*/
     private void getImage() {
-        SimpleDateFormat sdf = new SimpleDateFormat("YYYY-MM-dd");
+        SimpleDateFormat sdf = new SimpleDateFormat("YYYY-MM-dd", Locale.CHINA);
         String date = sdf.format(new Date());
         Log.e(TAG, "getImage: " + date );
         imagePresenter.request(date);

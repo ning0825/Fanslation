@@ -4,6 +4,7 @@ import android.content.Context;
 import android.widget.Toast;
 
 import com.tanhuan.fanslation.bean.ParaBean;
+import com.tanhuan.fanslation.entity.BookEntity;
 
 import io.reactivex.disposables.Disposable;
 
@@ -25,8 +26,8 @@ public class ParaPresenter implements IPresenter {
                 );
     }
 
-    public void save(ParaBean paraBean, Context context) {
-        paraModel.saveToBox(paraBean, new Callback() {
+    public void save(ParaBean paraBean, long whichBook, Context context) {
+        paraModel.saveToBox(paraBean, whichBook, new Callback() {
             @Override
             public void onResult(Object o) {
                 Toast.makeText(context, "saved", Toast.LENGTH_SHORT).show();
