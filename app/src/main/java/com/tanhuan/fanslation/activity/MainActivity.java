@@ -20,6 +20,7 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AnimationSet;
 import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ListView;
@@ -62,6 +63,8 @@ public class MainActivity extends AppCompatActivity implements IView<ImageBean> 
     View bgMenu;
     //菜单按钮
     MtoCView btMenu;
+    //背单词按钮
+    Button btRecite;
 
     //菜单布局放大动画
     ValueAnimator flAnimator;
@@ -97,6 +100,7 @@ public class MainActivity extends AppCompatActivity implements IView<ImageBean> 
         tvImageEn = findViewById(R.id.tv_image_en);
         tvImageCn = findViewById(R.id.tv_image_cn);
         tvBook = findViewById(R.id.tv_book);
+        btRecite = findViewById(R.id.bt_recite);
 
         store = BaseApp.getBoxStore();
         bookBox = store.boxFor(BookEntity.class);
@@ -111,6 +115,7 @@ public class MainActivity extends AppCompatActivity implements IView<ImageBean> 
         //菜单按钮点击事件
         btMenu.setOnClickListener(myClickListener);
         tvBook.setOnClickListener(myClickListener);
+        btRecite.setOnClickListener(myClickListener);
 
         animatorInit();
 
@@ -220,6 +225,9 @@ public class MainActivity extends AppCompatActivity implements IView<ImageBean> 
                     btMenu.setChecked(false);
                     break;
                 case R.id.tv_book:
+                    startActivity(new Intent(MainActivity.this, BookActivity.class));
+                    break;
+                case R.id.bt_recite:
                     startActivity(new Intent(MainActivity.this, BookActivity.class));
                 default:
                     break;
