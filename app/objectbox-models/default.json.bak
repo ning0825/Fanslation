@@ -5,7 +5,7 @@
   "entities": [
     {
       "id": "2:2114407652306060805",
-      "lastPropertyId": "6:5858857789104892442",
+      "lastPropertyId": "7:6948597679136348872",
       "name": "ParaEntity",
       "properties": [
         {
@@ -31,6 +31,11 @@
         {
           "id": "6:5858857789104892442",
           "name": "trans"
+        },
+        {
+          "id": "7:6948597679136348872",
+          "indexId": "3:6750846299181842679",
+          "name": "toOneBookEntityId"
         }
       ],
       "relations": []
@@ -74,10 +79,53 @@
         }
       ],
       "relations": []
+    },
+    {
+      "id": "4:2077830395014555529",
+      "lastPropertyId": "3:1777163091473729043",
+      "name": "BookEntity",
+      "properties": [
+        {
+          "id": "1:8457080494764675183",
+          "name": "Id"
+        },
+        {
+          "id": "2:6850569529588458533",
+          "indexId": "1:7945639410549789767",
+          "name": "bookName"
+        },
+        {
+          "id": "3:1777163091473729043",
+          "indexId": "2:5968114582794606395",
+          "name": "toOneUserEntityId"
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "5:9220029714419488787",
+      "lastPropertyId": "3:3247252510127718881",
+      "name": "UserEntity",
+      "properties": [
+        {
+          "id": "1:2252804948888072764",
+          "name": "Id"
+        },
+        {
+          "id": "2:7077008380743311998",
+          "indexId": "4:6401955163239965074",
+          "name": "userName"
+        },
+        {
+          "id": "3:3247252510127718881",
+          "name": "phone"
+        }
+      ],
+      "relations": []
     }
   ],
-  "lastEntityId": "3:4686470547489763927",
-  "lastIndexId": "0:0",
+  "lastEntityId": "5:9220029714419488787",
+  "lastIndexId": "4:6401955163239965074",
   "lastRelationId": "0:0",
   "lastSequenceId": "0:0",
   "modelVersion": 4,

@@ -30,6 +30,7 @@ import com.tanhuan.fanslation.MtoCView;
 import com.tanhuan.fanslation.R;
 import com.tanhuan.fanslation.bean.ImageBean;
 import com.tanhuan.fanslation.entity.BookEntity;
+import com.tanhuan.fanslation.entity.UserEntity;
 import com.tanhuan.fanslation.mvp.IView;
 import com.tanhuan.fanslation.mvp.ImagePresenter;
 import com.tanhuan.fanslation.util.Constants;
@@ -51,6 +52,8 @@ public class MainActivity extends AppCompatActivity implements IView<ImageBean> 
 
     MyClickListener myClickListener;
 
+    //单词书
+    TextView tvBook;
     //方形菜单按钮
     FrameLayout flMenu;
     //菜单布局
@@ -77,6 +80,7 @@ public class MainActivity extends AppCompatActivity implements IView<ImageBean> 
 
     BoxStore store;
     Box<BookEntity> bookBox;
+    Box<UserEntity> userBox;
 
     SharedPreferences sp;
 
@@ -92,9 +96,11 @@ public class MainActivity extends AppCompatActivity implements IView<ImageBean> 
         btMenu = findViewById(R.id.bt_menu);
         tvImageEn = findViewById(R.id.tv_image_en);
         tvImageCn = findViewById(R.id.tv_image_cn);
+        tvBook = findViewById(R.id.tv_book);
 
         store = BaseApp.getBoxStore();
         bookBox = store.boxFor(BookEntity.class);
+        userBox = store.boxFor(UserEntity.class);
 
         sp = getSharedPreferences(Constants.SP_NAME, Context.MODE_PRIVATE);
 
@@ -104,6 +110,7 @@ public class MainActivity extends AppCompatActivity implements IView<ImageBean> 
         bgMenu.setOnClickListener(myClickListener);
         //菜单按钮点击事件
         btMenu.setOnClickListener(myClickListener);
+        tvBook.setOnClickListener(myClickListener);
 
         animatorInit();
 
@@ -115,9 +122,12 @@ public class MainActivity extends AppCompatActivity implements IView<ImageBean> 
     private void boxInit() {
         //如果 bookBox 中没数据，新建一本书, 通常是安装后第一次打开程序时
         if (bookBox.isEmpty()) {
+            UserEntity userEntity = new UserEntity("paix", "15513616423");
             BookEntity bookEntity = new BookEntity("defaultBook");
             long id = bookBox.put(bookEntity);
-            sp.edit().putLong(Constants.SP_DEFAULT_BOOK_ID, id).apply();
+            userEntity.toManyBookEntities.add(bookEntity);
+            userBox.put(userEntity);
+            sp.edit().putLong(Constants.SP_DEFAULT_BOOK_ID_KEY, id).apply();
             Log.e(TAG, "boxInit: " + "save default book to box");
         }
     }
@@ -209,6 +219,8 @@ public class MainActivity extends AppCompatActivity implements IView<ImageBean> 
                     clMenuAnimator.reverse();
                     btMenu.setChecked(false);
                     break;
+                case R.id.tv_book:
+                    startActivity(new Intent(MainActivity.this, BookActivity.class));
                 default:
                     break;
             }

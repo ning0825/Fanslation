@@ -10,6 +10,5 @@ public class Constants {
 
     //sharedPreferenceName
     public static final String SP_NAME = "spName";
-    public static final String SP_DEFAULT_BOOK_ID = "defaultBook";
-    public static final String SP_
+    public static final String SP_DEFAULT_BOOK_ID_KEY = "defaultBook";
 }

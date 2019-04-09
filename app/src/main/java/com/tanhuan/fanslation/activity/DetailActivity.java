@@ -116,10 +116,11 @@ public class DetailActivity extends AppCompatActivity implements IView<ParaBean>
         vpDetail.setAdapter(vpAdater);
         tbDetail.setupWithViewPager(vpDetail);
 
-        paraPresenter.save(paraBean, ,this);
+        save(paraBean);
     }
 
     void save(ParaBean paraBean) {
-
+        long bookId = sp.getLong(Constants.SP_DEFAULT_BOOK_ID_KEY, 1);
+        paraPresenter.save(paraBean, bookId,this);
     }
 }

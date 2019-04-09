@@ -21,6 +21,8 @@ public class ParaEntity {
 
     public ToOne<BookEntity> toOneBookEntity;
 
+    public ParaEntity() {}
+
     public ParaEntity(String input, String phone, String examType, String trans, String sentences) {
         this.input = input;
         this.phone = phone;

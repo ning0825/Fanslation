@@ -42,12 +42,12 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <com.tanhuan.fanslation2.cview.InScrollListView
+            <com.tanhuan.fanslation.InScrollListView
                 android:id="@+id/lv_book"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:choiceMode="multipleChoiceModal">
-            </com.tanhuan.fanslation2.cview.InScrollListView>
+            </com.tanhuan.fanslation.InScrollListView>
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 

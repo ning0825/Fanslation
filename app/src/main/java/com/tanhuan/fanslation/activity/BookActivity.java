@@ -38,7 +38,7 @@ public class BookActivity extends AppCompatActivity {
 
     BoxStore store;
     Box<BookEntity> bookBox;
-    Box<ParaEntity> transBox;
+    Box<ParaEntity> paraBox;
     BookEntity bookEntity;
 
     int bookIndex;
@@ -61,13 +61,14 @@ public class BookActivity extends AppCompatActivity {
 
         store = (BaseApp.getBoxStore());
         bookBox = store.boxFor(BookEntity.class);
-        transBox = store.boxFor(ParaEntity.class);
+        paraBox = store.boxFor(ParaEntity.class);
 
         lvbook = findViewById(R.id.lv_book);
 
         //获取到单词书id并显示书中单词
-        bookIndex = getIntent().getIntExtra("bookId", 1);
-        bookEntity = bookBox.get(bookIndex);
+//        bookIndex = getIntent().getIntExtra("bookId", 1);
+        bookEntity = bookBox.get(1);
+        Log.e(TAG, "onCreate: " + bookEntity.bookName );
         getSupportActionBar().setTitle(bookEntity.getBookName());
         transList = new ArrayList<>();
 
@@ -191,7 +192,7 @@ public class BookActivity extends AppCompatActivity {
                 transToDel.add(transList.get(i));
             }
         }
-        transBox.remove(transToDel);
+        paraBox.remove(transToDel);
 
         bookIndex = getIntent().getIntExtra("bookId", 1);
         bookEntity = bookBox.get(bookIndex);
