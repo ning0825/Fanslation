@@ -228,7 +228,7 @@ public class MainActivity extends AppCompatActivity implements IView<ImageBean> 
                     startActivity(new Intent(MainActivity.this, BookActivity.class));
                     break;
                 case R.id.bt_recite:
-                    startActivity(new Intent(MainActivity.this, BookActivity.class));
+                    startActivity(new Intent(MainActivity.this, ReciteActivity.class));
                 default:
                     break;
             }

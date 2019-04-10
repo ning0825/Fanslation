@@ -25,6 +25,7 @@
             android:windowSoftInputMode="stateVisible|adjustResize" />
         <activity android:name=".activity.DetailActivity"></activity>
         <activity android:name=".activity.BookActivity" />
+        <activity android:name=".activity.ReciteActivity" />
     </application>
 
 </manifest>
