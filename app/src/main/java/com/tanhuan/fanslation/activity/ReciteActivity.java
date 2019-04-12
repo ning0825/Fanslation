@@ -25,12 +25,14 @@ import com.tanhuan.fanslation.BaseApp;
 import com.tanhuan.fanslation.R;
 import com.tanhuan.fanslation.entity.BookEntity;
 import com.tanhuan.fanslation.entity.ParaEntity;
+import com.tanhuan.fanslation.util.ViewUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import io.objectbox.Box;
 import io.objectbox.BoxStore;
+import okhttp3.internal.Util;
 
 public class ReciteActivity extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = "----ReciteActivity----";
@@ -80,6 +82,7 @@ public class ReciteActivity extends AppCompatActivity implements View.OnClickLis
         for (ParaEntity paraEntity : paras) {
             View view = getLayoutInflater().inflate(R.layout.item_vp_recite, null);
             ((TextView) view.findViewById(R.id.tv_recite_para)).setText(paraEntity.getTrans());
+            ((TextView) view.findViewById(R.id.tv_recite_input)).setText(paraEntity.getInput());
 
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -87,14 +90,11 @@ public class ReciteActivity extends AppCompatActivity implements View.OnClickLis
                     float paraY = view.findViewById(R.id.tv_recite_para).getY();
                     TextView tvInput = view.findViewById(R.id.tv_recite_input);
                     TextView tvPara = view.findViewById(R.id.tv_recite_para);
-                    ObjectAnimator transInput = ObjectAnimator.ofFloat(tvInput, View.Y, tvInput.getY(), paraY - tvInput.getHeight());
-                    ObjectAnimator alphaPara = ObjectAnimator.ofFloat(tvPara, View.ALPHA, 0, 1);
+                    ObjectAnimator transInput = ObjectAnimator.ofFloat(tvInput, View.Y, tvInput.getY(), paraY - tvInput.getHeight() - ViewUtil.dp2px(ReciteActivity.this, 20));
+                    ObjectAnimator alphaPara = ObjectAnimator.ofFloat(tvPara, View.ALPHA,  1);
                     AnimatorSet set = new AnimatorSet();
                     set.playTogether(transInput, alphaPara);
                     set.start();
-//                    transInput.start();
-//                    alphaPara.start();
-                    Toast.makeText(ReciteActivity.this, "click", Toast.LENGTH_SHORT).show();
                 }
             });
 
@@ -102,13 +102,14 @@ public class ReciteActivity extends AppCompatActivity implements View.OnClickLis
         }
         myAdapter = new MyAdapter(views);
         vp.setAdapter(myAdapter);
-//        vp.setOnTouchListener(new View.OnTouchListener() {
-//            @Override
-//            public boolean onTouch(View v, MotionEvent event) {
-//                return true;
-//            }
-//        });
-//
+
+        vp.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                Log.e(TAG, "onTouch: " );
+                return true;
+            }
+        });
 
     }
 
@@ -119,6 +120,7 @@ public class ReciteActivity extends AppCompatActivity implements View.OnClickLis
             case R.id.bt_forget:
                 break;
             case R.id.bt_remember:
+                vp.setCurrentItem(vp.getCurrentItem() + 1, true);
                 break;
             default:
                 break;
