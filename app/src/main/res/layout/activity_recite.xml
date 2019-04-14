@@ -13,7 +13,7 @@
         app:layout_constraintBottom_toTopOf="@id/vp_recite">
     </android.support.v7.widget.Toolbar>
 
-    <android.support.v4.view.ViewPager
+    <com.tanhuan.fanslation.UnrollViewPager
         android:id="@+id/vp_recite"
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -21,7 +21,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintBottom_toTopOf="@id/bt_remember">
-    </android.support.v4.view.ViewPager>
+    </com.tanhuan.fanslation.UnrollViewPager>
 
     <Button
         android:id="@+id/bt_forget"
@@ -30,7 +30,8 @@
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toLeftOf="@id/bt_remember"
-        android:layout_marginRight="20dp"/>
+        android:layout_marginRight="20dp"
+        android:isScrollContainer="true"/>
 
     <Button
         android:id="@+id/bt_remember"

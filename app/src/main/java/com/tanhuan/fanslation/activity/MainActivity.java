@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AnimationSet;
 import android.view.animation.AnimationUtils;
@@ -56,7 +57,7 @@ public class MainActivity extends AppCompatActivity implements IView<ImageBean> 
     //单词书
     TextView tvBook;
     //方形菜单按钮
-    FrameLayout flMenu;
+//    FrameLayout flMenu;
     //菜单布局
     ConstraintLayout clDialog;
     //按钮放大后的外部半透明背景
@@ -93,7 +94,7 @@ public class MainActivity extends AppCompatActivity implements IView<ImageBean> 
         setContentView(R.layout.activity_main);
 
         etInput = findViewById(R.id.et_input);
-        flMenu = findViewById(R.id.fl_menu);
+//        flMenu = findViewById(R.id.fl_menu);
         clDialog = findViewById(R.id.cl_dialog);
         bgMenu = findViewById(R.id.bg_meau);
         btMenu = findViewById(R.id.bt_menu);
@@ -122,6 +123,17 @@ public class MainActivity extends AppCompatActivity implements IView<ImageBean> 
         imagePresenter = new ImagePresenter(this);
 
         boxInit();
+
+        getImage();
+
+
+//        clDialog.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+//            @Override
+//            public void onGlobalLayout() {
+//                Log.e(TAG, "onGlobalLayout: " + clDialog.getHeight() );
+//            }
+//        });
+
     }
 
     private void boxInit() {
@@ -137,25 +149,29 @@ public class MainActivity extends AppCompatActivity implements IView<ImageBean> 
         }
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        getImage();
-    }
 
     /*
     显示每日一句*/
     private void getImage() {
         SimpleDateFormat sdf = new SimpleDateFormat("YYYY-MM-dd", Locale.CHINA);
         String date = sdf.format(new Date());
-        Log.e(TAG, "getImage: " + date );
+        Log.e(TAG, "getImage: " + date);
         imagePresenter.request(date);
     }
 
+    int heightCl;
+
     private void animatorInit() {
-        flAnimator = ValueAnimator.ofFloat(ViewUtil.dp2px(this, 60), 1000);
+        //todo measure clDialog's height
+        clDialog.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+        heightCl = clDialog.getMeasuredHeight();
+
+
+
+        flAnimator = ValueAnimator.ofFloat(ViewUtil.dp2px(this, 60), getWindow().getWindowManager().getDefaultDisplay().getWidth() - ViewUtil.dp2px(this, 40));
+
         bgMenuAnimator = ObjectAnimator.ofFloat(bgMenu, View.ALPHA, 0, 0.3f);
-        clMenuAnimator = ObjectAnimator.ofFloat(clDialog, View.ALPHA, 0,1);
+        clMenuAnimator = ObjectAnimator.ofFloat(clDialog, View.ALPHA, 0, 1);
 
         flAnimator.setDuration(ANIM_DURATION);
         bgMenuAnimator.setDuration(ANIM_DURATION);
@@ -170,7 +186,7 @@ public class MainActivity extends AppCompatActivity implements IView<ImageBean> 
                     bgMenu.setClickable(false);
                 } else {
                     bgMenu.setVisibility(View.VISIBLE);
-                    flMenu.setClickable(false);
+                    clDialog.setClickable(false);
                     bgMenu.setClickable(false);
                 }
             }
@@ -179,7 +195,7 @@ public class MainActivity extends AppCompatActivity implements IView<ImageBean> 
             public void onAnimationEnd(Animator animation, boolean isReverse) {
                 if (isReverse) {
                     bgMenu.setVisibility(View.GONE);
-                    flMenu.setClickable(true);
+                    clDialog.setClickable(true);
                     bgMenu.setClickable(true);
                 } else {
                     bgMenu.setClickable(true);
@@ -187,12 +203,12 @@ public class MainActivity extends AppCompatActivity implements IView<ImageBean> 
             }
         });
 
-        ViewGroup.LayoutParams params = flMenu.getLayoutParams();
+        ViewGroup.LayoutParams params = clDialog.getLayoutParams();
 
         flAnimator.addUpdateListener((animation -> {
             params.width = ((Number) animation.getAnimatedValue()).intValue();
-            params.height = ((Number) animation.getAnimatedValue()).intValue();
-            flMenu.setLayoutParams(params);
+            params.height = ((Number) animation.getAnimatedValue()).intValue() * (heightCl/getWindow().getWindowManager().getDefaultDisplay().getWidth() - ViewUtil.dp2px(this, 40));
+            clDialog.setLayoutParams(params);
         }));
     }
 
@@ -202,7 +218,7 @@ public class MainActivity extends AppCompatActivity implements IView<ImageBean> 
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.bt_menu:
-                    Log.e("btmenu", "onClick: " + v.getId() );
+                    Log.e("btmenu", "onClick: " + v.getId());
                     if (!btMenu.checked) {
                         bgMenuAnimator.reverse();
                         flAnimator.reverse();
@@ -214,7 +230,7 @@ public class MainActivity extends AppCompatActivity implements IView<ImageBean> 
                     }
                     break;
                 case R.id.et_input:
-                    startActivity(new Intent(MainActivity.this, SearchActivity.class ));
+                    startActivity(new Intent(MainActivity.this, SearchActivity.class));
                     AnimationSet animation = (AnimationSet) AnimationUtils.loadAnimation(MainActivity.this, R.anim.input_transtion);
                     etInput.startAnimation(animation);
                     break;

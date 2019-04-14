@@ -21,8 +21,11 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.tanhuan.fanslation.BaseApp;
 import com.tanhuan.fanslation.R;
+import com.tanhuan.fanslation.UnrollViewPager;
+import com.tanhuan.fanslation.bean.ParaBean;
 import com.tanhuan.fanslation.entity.BookEntity;
 import com.tanhuan.fanslation.entity.ParaEntity;
 import com.tanhuan.fanslation.util.ViewUtil;
@@ -46,14 +49,13 @@ public class ReciteActivity extends AppCompatActivity implements View.OnClickLis
     List<View> views;
 
     Toolbar toolbar;
-    ViewPager vp;
-
+    UnrollViewPager vp;
     MyAdapter myAdapter;
-
     Button btForget;
     Button btRemember;
-
     ActionBar actionBar;
+
+    Gson gson;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -62,6 +64,8 @@ public class ReciteActivity extends AppCompatActivity implements View.OnClickLis
 
         btForget = findViewById(R.id.bt_forget);
         btRemember = findViewById(R.id.bt_remember);
+        btForget.setOnClickListener(this);
+        btRemember.setOnClickListener(this);
 
         bookBox = BaseApp.getBoxStore().boxFor(BookEntity.class);
         bookEntity = bookBox.get(whichBook);
@@ -71,46 +75,41 @@ public class ReciteActivity extends AppCompatActivity implements View.OnClickLis
         toolbar = findViewById(R.id.tb_recite);
         setSupportActionBar(toolbar);
         if ((actionBar = getSupportActionBar()) != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setDisplayShowTitleEnabled(false);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setDisplayShowTitleEnabled(false);
         }
         toolbar.setNavigationOnClickListener((v -> onBackPressed()));
 
         //initialize viewPager
+        gson = new Gson();
         vp = findViewById(R.id.vp_recite);
         views = new ArrayList<>();
         for (ParaEntity paraEntity : paras) {
             View view = getLayoutInflater().inflate(R.layout.item_vp_recite, null);
-            ((TextView) view.findViewById(R.id.tv_recite_para)).setText(paraEntity.getTrans());
             ((TextView) view.findViewById(R.id.tv_recite_input)).setText(paraEntity.getInput());
 
-            view.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    float paraY = view.findViewById(R.id.tv_recite_para).getY();
-                    TextView tvInput = view.findViewById(R.id.tv_recite_input);
-                    TextView tvPara = view.findViewById(R.id.tv_recite_para);
-                    ObjectAnimator transInput = ObjectAnimator.ofFloat(tvInput, View.Y, tvInput.getY(), paraY - tvInput.getHeight() - ViewUtil.dp2px(ReciteActivity.this, 20));
-                    ObjectAnimator alphaPara = ObjectAnimator.ofFloat(tvPara, View.ALPHA,  1);
-                    AnimatorSet set = new AnimatorSet();
-                    set.playTogether(transInput, alphaPara);
-                    set.start();
-                }
-            });
+            String trans = paraEntity.getTrans();
+            ((TextView) view.findViewById(R.id.tv_recite_para)).setText(trans);
 
             views.add(view);
         }
         myAdapter = new MyAdapter(views);
         vp.setAdapter(myAdapter);
-
-        vp.setOnTouchListener(new View.OnTouchListener() {
+        vp.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                Log.e(TAG, "onTouch: " );
-                return true;
+            public void onClick(View v) {
+                Log.e("touchtest", "onClick: ");
+                View view = views.get(vp.getCurrentItem());
+                float paraY = view.findViewById(R.id.tv_recite_para).getY();
+                TextView tvInput = view.findViewById(R.id.tv_recite_input);
+                TextView tvPara = view.findViewById(R.id.tv_recite_para);
+                ObjectAnimator transInput = ObjectAnimator.ofFloat(tvInput, View.Y, tvInput.getY(), paraY - tvInput.getHeight() - ViewUtil.dp2px(ReciteActivity.this, 20));
+                ObjectAnimator alphaPara = ObjectAnimator.ofFloat(tvPara, View.ALPHA, 1);
+                AnimatorSet set = new AnimatorSet();
+                set.playTogether(transInput, alphaPara);
+                set.start();
             }
         });
-
     }
 
 
@@ -120,7 +119,11 @@ public class ReciteActivity extends AppCompatActivity implements View.OnClickLis
             case R.id.bt_forget:
                 break;
             case R.id.bt_remember:
-                vp.setCurrentItem(vp.getCurrentItem() + 1, true);
+                if (vp.getCurrentItem() == views.size() - 1) {
+                    Toast.makeText(this, "complete", Toast.LENGTH_SHORT).show();
+                } else {
+                    vp.setCurrentItem(vp.getCurrentItem() + 1, true);
+                }
                 break;
             default:
                 break;
