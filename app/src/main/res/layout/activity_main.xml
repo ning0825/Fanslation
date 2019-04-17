@@ -113,7 +113,7 @@
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="16dp"/>
 
-        <com.tanhuan.fanslation.MtoCView
+        <com.tanhuan.fanslation.customview.MtoCView
             android:id="@+id/bt_menu"
             android:layout_width="60dp"
             android:layout_height="60dp"

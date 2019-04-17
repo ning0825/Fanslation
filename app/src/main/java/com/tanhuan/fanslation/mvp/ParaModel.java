@@ -25,7 +25,13 @@ public class ParaModel implements IModel<ParaBean> {
 
     @Override
     public Observable<ParaBean> getFromServer(final String s) {
-        return Observable.create((ObservableOnSubscribe<ParaBean>) emitter -> emitter.onNext(HttpUtil.getPara(s)))
+        return Observable.create((ObservableOnSubscribe<ParaBean>) emitter -> {
+            if (HttpUtil.getPara(s) != null) {
+                emitter.onNext(HttpUtil.getPara(s));
+            } else {
+                emitter.onError(new Throwable("response is null"));
+            }
+        })
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread());
     }
@@ -72,7 +78,7 @@ public class ParaModel implements IModel<ParaBean> {
         senCn = sbCn.toString();
         sentences = senEn + "*" + senCn;
 
-        ParaEntity paraEntity = new ParaEntity(input, phone, examType,trans, sentences);
+        ParaEntity paraEntity = new ParaEntity(input, phone, examType,trans, sentences, 1);
         BookEntity bookEntity = bookBox.get(whichBook);
         bookEntity.toManyTransEntities.add(paraEntity);
         bookBox.put(bookEntity);

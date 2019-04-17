@@ -1,22 +1,17 @@
 package com.tanhuan.fanslation.activity;
 
-import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
-import android.animation.ValueAnimator;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AnimationSet;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,8 +19,7 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.tanhuan.fanslation.BaseApp;
 import com.tanhuan.fanslation.R;
-import com.tanhuan.fanslation.UnrollViewPager;
-import com.tanhuan.fanslation.bean.ParaBean;
+import com.tanhuan.fanslation.customview.UnrollViewPager;
 import com.tanhuan.fanslation.entity.BookEntity;
 import com.tanhuan.fanslation.entity.ParaEntity;
 import com.tanhuan.fanslation.util.ViewUtil;
@@ -34,8 +28,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.objectbox.Box;
-import io.objectbox.BoxStore;
-import okhttp3.internal.Util;
 
 public class ReciteActivity extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = "----ReciteActivity----";
@@ -44,7 +36,9 @@ public class ReciteActivity extends AppCompatActivity implements View.OnClickLis
 
     Box<BookEntity> bookBox;
     BookEntity bookEntity;
-    List<ParaEntity> paras;
+    List<ParaEntity> initParas;
+    List<ParaEntity> maskParas;
+    ParaEntity currentPara;
 
     List<View> views;
 
@@ -56,6 +50,9 @@ public class ReciteActivity extends AppCompatActivity implements View.OnClickLis
     ActionBar actionBar;
 
     Gson gson;
+
+    //rememberCount 小于 level 的单词会显示
+    int level = 5;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -69,7 +66,9 @@ public class ReciteActivity extends AppCompatActivity implements View.OnClickLis
 
         bookBox = BaseApp.getBoxStore().boxFor(BookEntity.class);
         bookEntity = bookBox.get(whichBook);
-        paras = bookEntity.toManyTransEntities;
+        initParas = bookEntity.toManyTransEntities;
+        maskParas = getMaskPara(initParas);
+
 
         //initialize toolbar
         toolbar = findViewById(R.id.tb_recite);
@@ -84,7 +83,7 @@ public class ReciteActivity extends AppCompatActivity implements View.OnClickLis
         gson = new Gson();
         vp = findViewById(R.id.vp_recite);
         views = new ArrayList<>();
-        for (ParaEntity paraEntity : paras) {
+        for (ParaEntity paraEntity : maskParas) {
             View view = getLayoutInflater().inflate(R.layout.item_vp_recite, null);
             ((TextView) view.findViewById(R.id.tv_recite_input)).setText(paraEntity.getInput());
 
@@ -98,11 +97,11 @@ public class ReciteActivity extends AppCompatActivity implements View.OnClickLis
         vp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.e("touchtest", "onClick: ");
+                Log.e("TouchTest", "onClick: " );
                 View view = views.get(vp.getCurrentItem());
-                float paraY = view.findViewById(R.id.tv_recite_para).getY();
                 TextView tvInput = view.findViewById(R.id.tv_recite_input);
                 TextView tvPara = view.findViewById(R.id.tv_recite_para);
+                float paraY = tvPara.getY();
                 ObjectAnimator transInput = ObjectAnimator.ofFloat(tvInput, View.Y, tvInput.getY(), paraY - tvInput.getHeight() - ViewUtil.dp2px(ReciteActivity.this, 20));
                 ObjectAnimator alphaPara = ObjectAnimator.ofFloat(tvPara, View.ALPHA, 1);
                 AnimatorSet set = new AnimatorSet();
@@ -112,13 +111,31 @@ public class ReciteActivity extends AppCompatActivity implements View.OnClickLis
         });
     }
 
+    private List<ParaEntity> getMaskPara(List<ParaEntity> paraEntities) {
+        List<ParaEntity> pes = new ArrayList<>();
+
+        for (ParaEntity para : paraEntities) {
+            //todo 思考一番显示哪些单词
+            if (para.getRemeberCount() < level) {
+                pes.add(para);
+            }
+        }
+
+        return pes;
+    }
+
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.bt_forget:
+                currentPara = maskParas.get(vp.getCurrentItem());
+                currentPara.setRemeberCount(currentPara.getRemeberCount() - 1);
                 break;
             case R.id.bt_remember:
+                currentPara = maskParas.get(vp.getCurrentItem());
+                currentPara.setRemeberCount(currentPara.getRemeberCount() + 1);
+
                 if (vp.getCurrentItem() == views.size() - 1) {
                     Toast.makeText(this, "complete", Toast.LENGTH_SHORT).show();
                 } else {

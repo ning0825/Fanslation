@@ -1,4 +1,4 @@
-package com.tanhuan.fanslation;
+package com.tanhuan.fanslation.customview;
 
 import android.animation.ValueAnimator;
 import android.content.Context;

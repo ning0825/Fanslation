@@ -2,33 +2,27 @@ package com.tanhuan.fanslation.activity;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.text.format.DateFormat;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AnimationSet;
 import android.view.animation.AnimationUtils;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.FrameLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.tanhuan.fanslation.BaseApp;
-import com.tanhuan.fanslation.MtoCView;
+import com.tanhuan.fanslation.customview.MtoCView;
 import com.tanhuan.fanslation.R;
 import com.tanhuan.fanslation.bean.ImageBean;
 import com.tanhuan.fanslation.entity.BookEntity;
@@ -38,8 +32,6 @@ import com.tanhuan.fanslation.mvp.ImagePresenter;
 import com.tanhuan.fanslation.util.Constants;
 import com.tanhuan.fanslation.util.ViewUtil;
 
-import java.text.FieldPosition;
-import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -56,8 +48,6 @@ public class MainActivity extends AppCompatActivity implements IView<ImageBean> 
 
     //单词书
     TextView tvBook;
-    //方形菜单按钮
-//    FrameLayout flMenu;
     //菜单布局
     ConstraintLayout clDialog;
     //按钮放大后的外部半透明背景
@@ -68,7 +58,8 @@ public class MainActivity extends AppCompatActivity implements IView<ImageBean> 
     Button btRecite;
 
     //菜单布局放大动画
-    ValueAnimator flAnimator;
+    ValueAnimator clWidAnimator;
+    ValueAnimator clHeiAnimator;
     //菜单外部背景透明度变化动画
     ObjectAnimator bgMenuAnimator;
     //菜单透明度变化动画
@@ -124,16 +115,7 @@ public class MainActivity extends AppCompatActivity implements IView<ImageBean> 
 
         boxInit();
 
-        getImage();
-
-
-//        clDialog.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-//            @Override
-//            public void onGlobalLayout() {
-//                Log.e(TAG, "onGlobalLayout: " + clDialog.getHeight() );
-//            }
-//        });
-
+//        getImage();
     }
 
     private void boxInit() {
@@ -166,18 +148,18 @@ public class MainActivity extends AppCompatActivity implements IView<ImageBean> 
         clDialog.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
         heightCl = clDialog.getMeasuredHeight();
 
-
-
-        flAnimator = ValueAnimator.ofFloat(ViewUtil.dp2px(this, 60), getWindow().getWindowManager().getDefaultDisplay().getWidth() - ViewUtil.dp2px(this, 40));
+        clWidAnimator = ValueAnimator.ofFloat(ViewUtil.dp2px(this, 60), getWindow().getWindowManager().getDefaultDisplay().getWidth() - ViewUtil.dp2px(this, 32));
+        clHeiAnimator = ValueAnimator.ofFloat(ViewUtil.dp2px(this, 60), heightCl);
 
         bgMenuAnimator = ObjectAnimator.ofFloat(bgMenu, View.ALPHA, 0, 0.3f);
         clMenuAnimator = ObjectAnimator.ofFloat(clDialog, View.ALPHA, 0, 1);
 
-        flAnimator.setDuration(ANIM_DURATION);
+        clWidAnimator.setDuration(ANIM_DURATION);
+        clHeiAnimator.setDuration(ANIM_DURATION);
         bgMenuAnimator.setDuration(ANIM_DURATION);
         clMenuAnimator.setDuration(ANIM_DURATION);
 
-        flAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
+        clWidAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
 
         bgMenuAnimator.addListener(new AnimatorListenerAdapter() {
             @Override
@@ -205,9 +187,13 @@ public class MainActivity extends AppCompatActivity implements IView<ImageBean> 
 
         ViewGroup.LayoutParams params = clDialog.getLayoutParams();
 
-        flAnimator.addUpdateListener((animation -> {
+        clWidAnimator.addUpdateListener((animation -> {
             params.width = ((Number) animation.getAnimatedValue()).intValue();
-            params.height = ((Number) animation.getAnimatedValue()).intValue() * (heightCl/getWindow().getWindowManager().getDefaultDisplay().getWidth() - ViewUtil.dp2px(this, 40));
+            clDialog.setLayoutParams(params);
+        }));
+
+        clHeiAnimator.addUpdateListener((animation -> {
+            params.height = ((Number) animation.getAnimatedValue()).intValue();
             clDialog.setLayoutParams(params);
         }));
     }
@@ -221,10 +207,12 @@ public class MainActivity extends AppCompatActivity implements IView<ImageBean> 
                     Log.e("btmenu", "onClick: " + v.getId());
                     if (!btMenu.checked) {
                         bgMenuAnimator.reverse();
-                        flAnimator.reverse();
+                        clWidAnimator.reverse();
+                        clHeiAnimator.reverse();
                         clMenuAnimator.reverse();
                     } else {
-                        flAnimator.start();
+                        clWidAnimator.start();
+                        clHeiAnimator.start();
                         bgMenuAnimator.start();
                         clMenuAnimator.start();
                     }
@@ -236,7 +224,8 @@ public class MainActivity extends AppCompatActivity implements IView<ImageBean> 
                     break;
                 case R.id.bg_meau:
                     bgMenuAnimator.reverse();
-                    flAnimator.reverse();
+                    clWidAnimator.reverse();
+                    clHeiAnimator.reverse();
                     clMenuAnimator.reverse();
                     btMenu.setChecked(false);
                     break;

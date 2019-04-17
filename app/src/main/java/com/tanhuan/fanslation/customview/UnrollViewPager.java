@@ -1,4 +1,4 @@
-package com.tanhuan.fanslation;
+package com.tanhuan.fanslation.customview;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -22,19 +22,19 @@ public class UnrollViewPager extends ViewPager {
     * */
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
-        Log.e(TAG, "dispatchTouchEvent: " );
+        Log.e("TouchTest", "dispatchTouchEvent: " );
         return super.dispatchTouchEvent(ev);
     }
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
-        Log.e(TAG, "onInterceptTouchEvent: " );
+        Log.e("TouchTest", "onInterceptTouchEvent: " );
         return true;
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
-        Log.e(TAG, "onTouchEvent: ");
+        Log.e("TouchTest", "onTouchEvent: " );
         if (ev.getAction() == MotionEvent.ACTION_UP) {
             performClick();
         }

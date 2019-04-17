@@ -18,17 +18,20 @@ public class ParaEntity {
     String trans;
     //例句
     String sentences;
+    //点击 “记住” 的次数
+    int remeberCount;
 
     public ToOne<BookEntity> toOneBookEntity;
 
     public ParaEntity() {}
 
-    public ParaEntity(String input, String phone, String examType, String trans, String sentences) {
+    public ParaEntity(String input, String phone, String examType, String trans, String sentences, int count) {
         this.input = input;
         this.phone = phone;
         this.examType = examType;
         this.trans = trans;
         this.sentences = sentences;
+        this.remeberCount = count;
     }
 
     public String getInput() {
@@ -69,5 +72,13 @@ public class ParaEntity {
 
     public void setSentences(String sentences) {
         this.sentences = sentences;
+    }
+
+    public int getRemeberCount() {
+        return remeberCount;
+    }
+
+    public void setRemeberCount(int remeberCount) {
+        this.remeberCount = remeberCount;
     }
 }

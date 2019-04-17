@@ -1,4 +1,4 @@
-package com.tanhuan.fanslation;
+package com.tanhuan.fanslation.customview;
 
 import android.content.Context;
 import android.util.AttributeSet;

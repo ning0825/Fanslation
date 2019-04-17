@@ -21,9 +21,8 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.tanhuan.fanslation.BaseApp;
-import com.tanhuan.fanslation.InScrollListView;
+import com.tanhuan.fanslation.customview.InScrollListView;
 import com.tanhuan.fanslation.R;
-import com.tanhuan.fanslation.bean.ParaBean;
 import com.tanhuan.fanslation.entity.BookEntity;
 import com.tanhuan.fanslation.entity.ParaEntity;
 
