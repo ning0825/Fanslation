@@ -17,6 +17,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.tanhuan.fanslation.R;
 import com.tanhuan.fanslation.bean.AssocBean;
@@ -88,5 +89,10 @@ public class SearchActivity extends AppCompatActivity implements IView<AssocBean
             Collections.reverse(keyList);
             lvAssoc.setAdapter(new ArrayAdapter<>(SearchActivity.this, android.R.layout.simple_list_item_1, keyList));
         }
+    }
+
+    @Override
+    public void showError(Throwable throwable) {
+        Toast.makeText(this, throwable.getMessage(), Toast.LENGTH_SHORT).show();
     }
 }

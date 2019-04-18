@@ -7,6 +7,7 @@ import com.tanhuan.fanslation.bean.ParaBean;
 import com.tanhuan.fanslation.entity.BookEntity;
 
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
 
 public class ParaPresenter implements IPresenter {
     private ParaModel paraModel;
@@ -21,9 +22,17 @@ public class ParaPresenter implements IPresenter {
     @Override
     public void request(String s) {
         disposable = paraModel.getFromServer(s)
-                .subscribe((paraBean) ->
-                    view.showResult(paraBean)
-                );
+                .subscribe(new Consumer<ParaBean>() {
+                    @Override
+                    public void accept(ParaBean paraBean) throws Exception {
+                        view.showResult(paraBean);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        view.showError(throwable);
+                    }
+                });
     }
 
     public void save(ParaBean paraBean, long whichBook, Context context) {

@@ -20,6 +20,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.tanhuan.fanslation.BaseApp;
 import com.tanhuan.fanslation.customview.MtoCView;
@@ -30,6 +31,7 @@ import com.tanhuan.fanslation.entity.UserEntity;
 import com.tanhuan.fanslation.mvp.IView;
 import com.tanhuan.fanslation.mvp.ImagePresenter;
 import com.tanhuan.fanslation.util.Constants;
+import com.tanhuan.fanslation.util.HttpUtil;
 import com.tanhuan.fanslation.util.ViewUtil;
 
 import java.text.SimpleDateFormat;
@@ -116,6 +118,8 @@ public class MainActivity extends AppCompatActivity implements IView<ImageBean> 
         boxInit();
 
 //        getImage();
+
+        Toast.makeText(this, HttpUtil.isConnected(this)?"connected":"no network", Toast.LENGTH_SHORT).show();
     }
 
     private void boxInit() {
@@ -247,8 +251,14 @@ public class MainActivity extends AppCompatActivity implements IView<ImageBean> 
     }
 
     @Override
+    public void showError(Throwable throwable) {
+        Toast.makeText(this, throwable.getMessage(), Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         imagePresenter.detachView();
     }
+
 }

@@ -12,7 +12,13 @@ import io.reactivex.schedulers.Schedulers;
 public class ImageModel implements IModel<ImageBean> {
     @Override
     public Observable<ImageBean> getFromServer(String s) {
-        return Observable.create((ObservableOnSubscribe<ImageBean>)emitter -> emitter.onNext(HttpUtil.getImage(s)))
+        return Observable.create((ObservableOnSubscribe<ImageBean>)emitter -> {
+            if (HttpUtil.getPara(s) != null) {
+                emitter.onNext(HttpUtil.getImage(s));
+            } else {
+                emitter.onError(new Throwable("response is null"));
+            }
+        })
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread());
     }

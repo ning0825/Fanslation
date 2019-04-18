@@ -1,6 +1,11 @@
 package com.tanhuan.fanslation.mvp;
 
+import com.tanhuan.fanslation.bean.AssocBean;
+import com.tanhuan.fanslation.bean.ImageBean;
+import com.tanhuan.fanslation.bean.ParaBean;
+
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
 
 public class ImagePresenter implements IPresenter {
     ImageModel imageModel;
@@ -15,7 +20,17 @@ public class ImagePresenter implements IPresenter {
     @Override
     public void request(String s) {
         disposable = imageModel.getFromServer(s)
-                .subscribe(imageBean -> view.showResult(imageBean));
+                .subscribe(new Consumer<ImageBean>() {
+                    @Override
+                    public void accept(ImageBean imageBean) throws Exception {
+                        view.showResult(imageBean);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        view.showError(throwable);
+                    }
+                });
     }
 
     @Override

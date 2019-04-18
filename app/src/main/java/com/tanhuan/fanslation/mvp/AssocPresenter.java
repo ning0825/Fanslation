@@ -1,6 +1,7 @@
 package com.tanhuan.fanslation.mvp;
 
 import com.tanhuan.fanslation.bean.AssocBean;
+import com.tanhuan.fanslation.bean.ParaBean;
 
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
@@ -18,7 +19,17 @@ public class AssocPresenter implements IPresenter {
     @Override
     public void request(String s) {
         disposable = assocModel.getFromServer(s)
-                .subscribe(assocBean -> view.showResult(assocBean));
+                .subscribe(new Consumer<AssocBean>() {
+                    @Override
+                    public void accept(AssocBean assocBean) throws Exception {
+                        view.showResult(assocBean);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        view.showError(throwable);
+                    }
+                });
     }
 
     @Override

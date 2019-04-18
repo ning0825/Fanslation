@@ -20,6 +20,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.tanhuan.fanslation.R;
 import com.tanhuan.fanslation.bean.ParaBean;
@@ -117,6 +118,11 @@ public class DetailActivity extends AppCompatActivity implements IView<ParaBean>
         tbDetail.setupWithViewPager(vpDetail);
 
         save(paraBean);
+    }
+
+    @Override
+    public void showError(Throwable throwable) {
+        Toast.makeText(this, throwable.getMessage(), Toast.LENGTH_SHORT).show();
     }
 
     void save(ParaBean paraBean) {
