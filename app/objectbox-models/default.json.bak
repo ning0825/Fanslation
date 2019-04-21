@@ -5,7 +5,7 @@
   "entities": [
     {
       "id": "2:2114407652306060805",
-      "lastPropertyId": "8:2448768737056106639",
+      "lastPropertyId": "10:484079341218241045",
       "name": "ParaEntity",
       "properties": [
         {
@@ -38,8 +38,12 @@
           "name": "toOneBookEntityId"
         },
         {
-          "id": "8:2448768737056106639",
-          "name": "count"
+          "id": "9:237819071390832006",
+          "name": "remeberCount"
+        },
+        {
+          "id": "10:484079341218241045",
+          "name": "note"
         }
       ],
       "relations": []
@@ -140,7 +144,8 @@
   "retiredIndexUids": [],
   "retiredPropertyUids": [
     8694715341288307261,
-    7365485032226774393
+    7365485032226774393,
+    2448768737056106639
   ],
   "retiredRelationUids": [],
   "version": 1

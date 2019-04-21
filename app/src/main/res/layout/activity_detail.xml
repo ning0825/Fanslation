@@ -6,29 +6,34 @@
     android:layout_height="match_parent"
     tools:context=".activity.DetailActivity">
 
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar_detail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+    </android.support.v7.widget.Toolbar>
+
     <TextView
         android:id="@+id/tv_key"
-        android:text="thrill"
-        android:textSize="40sp"
-        android:textColor="@color/black"
-        android:textStyle="bold"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="20dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"/>
+        android:layout_marginStart="16dp"
+        android:textColor="@color/black"
+        android:textSize="40sp"
+        android:textStyle="bold"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar_detail" />
 
     <TextView
         android:id="@+id/tv_phone"
-        android:text="θrɪl"
-        android:textSize="20sp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="8dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/tv_key"
-        app:layout_constraintLeft_toLeftOf="parent"/>
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="8dp"
+        android:textSize="20sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_key" />
 
     <android.support.design.widget.TabLayout
         android:id="@+id/tb_detail"

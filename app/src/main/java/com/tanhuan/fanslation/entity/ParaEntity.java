@@ -1,5 +1,7 @@
 package com.tanhuan.fanslation.entity;
 
+import java.util.Date;
+
 import io.objectbox.annotation.Entity;
 import io.objectbox.annotation.Id;
 import io.objectbox.relation.ToOne;
@@ -20,8 +22,12 @@ public class ParaEntity {
     String sentences;
     //点击 “记住” 的次数
     int remeberCount;
+    //note
+    String note;
+    //data
+    Date date;
 
-    public ToOne<BookEntity> toOneBookEntity;
+    ToOne<BookEntity> toOneBookEntity;
 
     public ParaEntity() {}
 
@@ -32,6 +38,7 @@ public class ParaEntity {
         this.trans = trans;
         this.sentences = sentences;
         this.remeberCount = count;
+        note = "";
     }
 
     public String getInput() {
@@ -80,5 +87,13 @@ public class ParaEntity {
 
     public void setRemeberCount(int remeberCount) {
         this.remeberCount = remeberCount;
+    }
+
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
     }
 }

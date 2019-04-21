@@ -11,4 +11,8 @@ public class Constants {
     //sharedPreferenceName
     public static final String SP_NAME = "spName";
     public static final String SP_DEFAULT_BOOK_ID_KEY = "defaultBook";
+
+    //unsplash Key
+//    public static final String UNSPLASH_ACCESS_KEY = "0166838389a0ca6b4a2c57bcbb56ecf0b8dfe38fe09e929798c74262cef014de";
+//    public static final String UNSPLASH_SECRET_KEY = "6b1c3f976ca06bcc4ebb4ed45e014b586e101f28dc595d442301698fb552166b";
 }

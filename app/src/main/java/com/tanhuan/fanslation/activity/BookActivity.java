@@ -57,6 +57,7 @@ public class BookActivity extends AppCompatActivity {
         toolbar = findViewById(R.id.tb_book);
         ctbl = findViewById(R.id.ctbl);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         store = (BaseApp.getBoxStore());
         bookBox = store.boxFor(BookEntity.class);

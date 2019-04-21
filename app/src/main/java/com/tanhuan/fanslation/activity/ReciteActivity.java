@@ -77,7 +77,6 @@ public class ReciteActivity extends AppCompatActivity implements View.OnClickLis
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setDisplayShowTitleEnabled(false);
         }
-        toolbar.setNavigationOnClickListener((v -> onBackPressed()));
 
         //initialize viewPager
         gson = new Gson();

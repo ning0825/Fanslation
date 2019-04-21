@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -19,6 +20,7 @@ import android.view.animation.AnimationSet;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -48,23 +50,26 @@ public class MainActivity extends AppCompatActivity implements IView<ImageBean> 
 
     MyClickListener myClickListener;
 
-    //单词书
+    //vocabulary book
     TextView tvBook;
-    //菜单布局
+    //menu layout
     ConstraintLayout clDialog;
-    //按钮放大后的外部半透明背景
+    //the gray background when expand menu
     View bgMenu;
-    //菜单按钮
+    //menu button
     MtoCView btMenu;
-    //背单词按钮
+    //recite button
     Button btRecite;
+    //layout of this activity, use for Snackbar constructor
+    ConstraintLayout clMain;
+    TextView tvStatistic;
 
-    //菜单布局放大动画
+    //menu layout scale in animation
     ValueAnimator clWidAnimator;
     ValueAnimator clHeiAnimator;
-    //菜单外部背景透明度变化动画
+    //gray background transparency change animation
     ObjectAnimator bgMenuAnimator;
-    //菜单透明度变化动画
+    //menu transparency change animation
     ObjectAnimator clMenuAnimator;
 
     int ANIM_DURATION = 300;
@@ -87,7 +92,6 @@ public class MainActivity extends AppCompatActivity implements IView<ImageBean> 
         setContentView(R.layout.activity_main);
 
         etInput = findViewById(R.id.et_input);
-//        flMenu = findViewById(R.id.fl_menu);
         clDialog = findViewById(R.id.cl_dialog);
         bgMenu = findViewById(R.id.bg_meau);
         btMenu = findViewById(R.id.bt_menu);
@@ -95,35 +99,37 @@ public class MainActivity extends AppCompatActivity implements IView<ImageBean> 
         tvImageCn = findViewById(R.id.tv_image_cn);
         tvBook = findViewById(R.id.tv_book);
         btRecite = findViewById(R.id.bt_recite);
-
-        store = BaseApp.getBoxStore();
-        bookBox = store.boxFor(BookEntity.class);
-        userBox = store.boxFor(UserEntity.class);
+        clMain = findViewById(R.id.cl_main);
+        tvStatistic = findViewById(R.id.tv_statistic);
 
         sp = getSharedPreferences(Constants.SP_NAME, Context.MODE_PRIVATE);
 
         myClickListener = new MyClickListener();
         etInput.setOnClickListener(myClickListener);
-        //点击菜单外部缩小菜单
         bgMenu.setOnClickListener(myClickListener);
-        //菜单按钮点击事件
         btMenu.setOnClickListener(myClickListener);
         tvBook.setOnClickListener(myClickListener);
         btRecite.setOnClickListener(myClickListener);
+        tvStatistic.setOnClickListener(myClickListener);
 
         animatorInit();
+        boxInit();
 
         imagePresenter = new ImagePresenter(this);
 
-        boxInit();
-
-//        getImage();
-
-        Toast.makeText(this, HttpUtil.isConnected(this)?"connected":"no network", Toast.LENGTH_SHORT).show();
+        if (HttpUtil.isConnected(this)) {
+            getImage();
+        } else {
+            Snackbar.make(clMain, "no network", Snackbar.LENGTH_SHORT).show();
+        }
     }
 
     private void boxInit() {
-        //如果 bookBox 中没数据，新建一本书, 通常是安装后第一次打开程序时
+        store = BaseApp.getBoxStore();
+        bookBox = store.boxFor(BookEntity.class);
+        userBox = store.boxFor(UserEntity.class);
+
+        //add a book if bookBox is empty, when you first install this app.
         if (bookBox.isEmpty()) {
             UserEntity userEntity = new UserEntity("paix", "15513616423");
             BookEntity bookEntity = new BookEntity("defaultBook");
@@ -238,6 +244,10 @@ public class MainActivity extends AppCompatActivity implements IView<ImageBean> 
                     break;
                 case R.id.bt_recite:
                     startActivity(new Intent(MainActivity.this, ReciteActivity.class));
+                    break;
+
+                case R.id.tv_statistic:
+                    startActivity(new Intent(MainActivity.this, StatisticActivity.class));
                 default:
                     break;
             }

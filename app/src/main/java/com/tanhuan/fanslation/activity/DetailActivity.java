@@ -13,9 +13,11 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.transition.Slide;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -41,6 +43,7 @@ public class DetailActivity extends AppCompatActivity implements IView<ParaBean>
 
     TabLayout tbDetail;
     ViewPager vpDetail;
+    Toolbar toolbarDetail;
     List<Fragment> fragments;
 
     SharedPreferences sp;
@@ -56,6 +59,11 @@ public class DetailActivity extends AppCompatActivity implements IView<ParaBean>
         paraPresenter = new ParaPresenter(this);
         tvKey = findViewById(R.id.tv_key);
         tvPhone = findViewById(R.id.tv_phone);
+        toolbarDetail = findViewById(R.id.toolbar_detail);
+
+        setSupportActionBar(toolbarDetail);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         sp = getSharedPreferences(Constants.SP_NAME, Context.MODE_PRIVATE);
 

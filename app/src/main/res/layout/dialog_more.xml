@@ -41,7 +41,7 @@
         android:paddingBottom="10dp"
         android:text="auto star"
         android:textColor="@color/white"
-        android:textSize="30sp"
+        android:textSize="24sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/iv_avator"
         app:layout_constraintEnd_toStartOf="@id/swc_auto_star"/>
@@ -59,13 +59,13 @@
         app:layout_constraintTop_toTopOf="@+id/tv_auto_star"/>
 
     <TextView
-        android:id="@+id/tv_choose_book"
+        android:id="@+id/tv_statistic"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="0dp"
         android:layout_marginTop="8dp"
-        android:text="choose a book"
-        android:textSize="30sp"
+        android:text="statistic"
+        android:textSize="24sp"
         android:paddingLeft="40dp"
         android:paddingTop="10dp"
         android:paddingBottom="10dp"
@@ -81,12 +81,12 @@
         android:layout_marginTop="8dp"
         android:text="about"
         android:textColor="@color/white"
-        android:textSize="30sp"
+        android:textSize="24sp"
         android:paddingLeft="40dp"
         android:paddingTop="10dp"
         android:paddingBottom="10dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_choose_book" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_statistic" />
 
     <TextView
         android:id="@+id/tv_sign_out"
@@ -96,7 +96,7 @@
         android:layout_marginTop="8dp"
         android:text="sign out"
         android:textColor="@color/white"
-        android:textSize="30sp"
+        android:textSize="24sp"
         android:paddingLeft="40dp"
         android:paddingTop="10dp"
         android:paddingBottom="10dp"

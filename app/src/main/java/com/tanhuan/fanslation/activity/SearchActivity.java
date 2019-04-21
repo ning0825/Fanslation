@@ -32,10 +32,8 @@ public class SearchActivity extends AppCompatActivity implements IView<AssocBean
     Button btSubmit;
     EditText etInputSearch;
     ListView lvAssoc;
-
     AssocPresenter assocPresenter;
     List<String> keyList;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +71,8 @@ public class SearchActivity extends AppCompatActivity implements IView<AssocBean
         });
 
         lvAssoc.setOnItemClickListener((parent, view, position, id) -> {
+            etInputSearch.setText("");
+
             Intent intent = new Intent(SearchActivity.this, DetailActivity.class);
             intent.putExtra("key", keyList.get(position));
             startActivity(intent);

@@ -25,9 +25,10 @@
         <activity
             android:name=".activity.SearchActivity"
             android:windowSoftInputMode="stateVisible|adjustResize" />
-        <activity android:name=".activity.DetailActivity"/>
-        <activity android:name=".activity.BookActivity" />
-        <activity android:name=".activity.ReciteActivity" />
+        <activity android:name=".activity.DetailActivity" android:parentActivityName=".activity.MainActivity"/>
+        <activity android:name=".activity.BookActivity" android:parentActivityName=".activity.MainActivity"/>
+        <activity android:name=".activity.ReciteActivity" android:parentActivityName=".activity.MainActivity"/>
+        <activity android:name=".activity.StatisticActivity" android:parentActivityName=".activity.MainActivity"/>
 
     </application>
 
