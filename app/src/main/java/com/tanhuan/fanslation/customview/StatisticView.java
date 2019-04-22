@@ -10,6 +10,7 @@ import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.DecelerateInterpolator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +33,7 @@ public class StatisticView extends View {
     int[] searchNums = new int[7];
     int[] reciteNums = new int[7];
     int[] easyNums = new int[7];
+    int[] ress;
 
     int maxRecite;
 
@@ -59,8 +61,20 @@ public class StatisticView extends View {
 
     boolean t = true;
 
+    ValueAnimator animator;
+
 
     {
+
+    }
+
+//    public StatisticView(Context context) {
+//        super(context);
+//    }
+
+    public StatisticView(Context context, @Nullable AttributeSet attrs) {
+        super(context, attrs);
+
         linePaint = new Paint();
         linePaint.setColor(Color.GRAY);
         linePaint.setStyle(Paint.Style.STROKE);
@@ -85,20 +99,37 @@ public class StatisticView extends View {
         //test data
         setDates(new String[]{"16", "17", "18", "19", "20", "21", "22"});
         setReciteNums(new int[]{20, 10, 20, 45, 2, 19, 20});
+        ress = new int[]{20, 10, 20, 45, 2, 19, 20};
 
         //find max num in reciteNums to determine Y
         maxRecite = findMaxRecite(reciteNums);
 
         recitePath = new Path();
         axisPath = new Path();
-    }
 
-//    public StatisticView(Context context) {
-//        super(context);
-//    }
+        animator = ValueAnimator.ofFloat(0, 1);
+        animator.setDuration(1000);
+        animator.setInterpolator(new DecelerateInterpolator());
+        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+//                for (int i = 0; i < ress.length; i++) {
+//                    reciteNums[i] = (int)(ress[i] * (float)animation.getAnimatedValue());
+//                }
+                Log.e(TAG, "paix******" + ress[0]);
+//                reciteNums[0] = 50;
+                invalidate();
+                Log.e(TAG, "paix>>>>>>>" + reciteNums[0]);
+                reciteNums[0] = (int)(ress[0] * (float)animation.getAnimatedValue());
+                reciteNums[1] = (int)(ress[1] * (float)animation.getAnimatedValue());
+                reciteNums[2] = (int)(ress[2] * (float)animation.getAnimatedValue());
+                reciteNums[3] = (int)(ress[3] * (float)animation.getAnimatedValue());
+                reciteNums[4] = (int)(ress[4] * (float)animation.getAnimatedValue());
+                reciteNums[5] = (int)(ress[5] * (float)animation.getAnimatedValue());
+                reciteNums[6] = (int)(ress[6] * (float)animation.getAnimatedValue());
 
-    public StatisticView(Context context, @Nullable AttributeSet attrs) {
-        super(context, attrs);
+            }
+        });
     }
 
 //    public StatisticView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
@@ -139,6 +170,7 @@ public class StatisticView extends View {
         }
 
         //draw reciteNums
+        recitePath.reset();
         for (int i = 0; i < dates.length; i++) {
             recitePath.moveTo(xs[i], height - sheetPadding);
             recitePath.rLineTo(0, -ys[i]);
@@ -146,6 +178,7 @@ public class StatisticView extends View {
             //draw date
             canvas.drawText(dates[i], xs[i] - dateWidth / 2, height - sheetPadding + dateWidth, yellowPaint);
         }
+        Log.e(TAG, "onDraw: ys0:" + ys[0]);
         canvas.drawPath(recitePath, redPaint);
 
         //draw x and y axis
@@ -189,26 +222,7 @@ public class StatisticView extends View {
     }
 
     public void startAnim() {
-        int[] ress = reciteNums;
-        ValueAnimator animator = ValueAnimator.ofFloat(0, 1);
-        animator.setDuration(5000);
-        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-//                for (int i = 0; i < ress.length; i++) {
-//                    reciteNums[i] = (int)(ress[i] * (float)animation.getAnimatedValue());
-//                }
-                Log.e(TAG, "paix******" + (int)(ress[0] * (float)animation.getAnimatedValue()));
-                reciteNums[0] = (int)(ress[0] * (float)animation.getAnimatedValue());
-//                reciteNums[1] = (int)(ress[1] * (float)animation.getAnimatedValue());
-//                reciteNums[2] = (int)(ress[2] * (float)animation.getAnimatedValue());
-//                reciteNums[3] = (int)(ress[3] * (float)animation.getAnimatedValue());
-//                reciteNums[4] = (int)(ress[4] * (float)animation.getAnimatedValue());
-//                reciteNums[5] = (int)(ress[5] * (float)animation.getAnimatedValue());
-//                reciteNums[6] = (int)(ress[6] * (float)animation.getAnimatedValue());
 
-            }
-        });
         animator.start();
     }
 }
