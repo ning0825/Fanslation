@@ -5,7 +5,7 @@
   "entities": [
     {
       "id": "2:2114407652306060805",
-      "lastPropertyId": "10:484079341218241045",
+      "lastPropertyId": "11:1727530912086755208",
       "name": "ParaEntity",
       "properties": [
         {
@@ -44,6 +44,10 @@
         {
           "id": "10:484079341218241045",
           "name": "note"
+        },
+        {
+          "id": "11:1727530912086755208",
+          "name": "date"
         }
       ],
       "relations": []

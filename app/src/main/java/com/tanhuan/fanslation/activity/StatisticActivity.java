@@ -6,9 +6,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
 import com.tanhuan.fanslation.R;
+import com.tanhuan.fanslation.customview.StatisticView;
 
 public class StatisticActivity extends AppCompatActivity {
     Toolbar tbStatistic;
+    StatisticView statisticView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -16,9 +18,12 @@ public class StatisticActivity extends AppCompatActivity {
         setContentView(R.layout.activity_statistic);
 
         tbStatistic = findViewById(R.id.tb_statistic);
+        statisticView = findViewById(R.id.sv_statistic);
 
         setSupportActionBar(tbStatistic);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        statisticView.startAnim();
     }
 }

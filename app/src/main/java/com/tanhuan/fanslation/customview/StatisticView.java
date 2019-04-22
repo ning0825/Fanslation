@@ -1,14 +1,22 @@
 package com.tanhuan.fanslation.customview;
 
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Path;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class StatisticView extends View {
+    private static final String TAG = "StatisticView";
+
     Paint linePaint;
     Paint redPaint;
     Paint greenPaint;
@@ -16,59 +24,191 @@ public class StatisticView extends View {
 
     int width;
     int height;
-    float sheetPadding = 50 ;
+    float sheetPadding = 80;
+    int overAxis = 0;
+
+    //data
+    String[] dates = new String[7];
+    int[] searchNums = new int[7];
+    int[] reciteNums = new int[7];
+    int[] easyNums = new int[7];
+
+    int maxRecite;
+
+    //the path to draw recite lines
+    Path recitePath;
+    //the path of xy axis
+    Path axisPath;
+    //dots on x axis
+    float[] xs = new float[7];
+    float[] ys = new float[7];
+
+    //mark on y axis
+    List<Float> markYs = new ArrayList<>();
+
+
+    //length per date
+    float xUnitLength;
+    //length per reciteNum
+    float yUnitLength;
+    //length per 10 reciteNum
+    float yMarkLength;
+
+    //date text width
+    float dateWidth;
+
+    boolean t = true;
+
 
     {
         linePaint = new Paint();
         linePaint.setColor(Color.GRAY);
-        linePaint.setStyle(Paint.Style.FILL_AND_STROKE);
+        linePaint.setStyle(Paint.Style.STROKE);
         linePaint.setStrokeWidth(10);
-        linePaint.setStrokeCap(Paint.Cap.ROUND);
 
         redPaint = new Paint();
         redPaint.setColor(Color.RED);
         redPaint.setStyle(Paint.Style.FILL_AND_STROKE);
-        linePaint.setStrokeWidth(10);
+        redPaint.setStrokeWidth(20);
+        redPaint.setStrokeCap(Paint.Cap.BUTT);
 
         greenPaint = new Paint();
         greenPaint.setColor(Color.GREEN);
         greenPaint.setStyle(Paint.Style.FILL_AND_STROKE);
-        linePaint.setStrokeWidth(10);
+        greenPaint.setStrokeWidth(10);
 
         yellowPaint = new Paint();
-        yellowPaint.setColor(Color.YELLOW);
+        yellowPaint.setColor(Color.GRAY);
         yellowPaint.setStyle(Paint.Style.FILL_AND_STROKE);
-        linePaint.setStrokeWidth(10);
+        greenPaint.setStrokeWidth(3);
+        yellowPaint.setTextSize(40);
+        //test data
+        setDates(new String[]{"16", "17", "18", "19", "20", "21", "22"});
+        setReciteNums(new int[]{20, 10, 20, 45, 2, 19, 20});
+
+        //find max num in reciteNums to determine Y
+        maxRecite = findMaxRecite(reciteNums);
+
+        recitePath = new Path();
+        axisPath = new Path();
     }
 
-    public StatisticView(Context context) {
-        super(context);
-    }
+//    public StatisticView(Context context) {
+//        super(context);
+//    }
 
-    public StatisticView(Context context,  @Nullable AttributeSet attrs) {
+    public StatisticView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public StatisticView(Context context,  @Nullable AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-    }
+//    public StatisticView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+//        super(context, attrs, defStyleAttr);
+//    }
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        Log.e(TAG, "onMeasure: ");
 
         width = getMeasuredWidth();
         height = getMeasuredHeight();
+
+        xUnitLength = (width - sheetPadding * 2 - overAxis) / 8;
+        yUnitLength = (height - sheetPadding * 2 - overAxis) / ((maxRecite / 10.0f + 1) * 10);
+        yMarkLength = (height - sheetPadding * 2 - overAxis) / (maxRecite / 10.0f + 1);
+
+        dateWidth = yellowPaint.measureText("22");
+
+
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        //y axis
-        canvas.drawLine(sheetPadding, 0, sheetPadding, height-sheetPadding, linePaint);
-        //x axis
-        canvas.drawLine(sheetPadding, height-sheetPadding, width-sheetPadding, height-sheetPadding, linePaint);
+        if (t) {
+            for (int i = 0; i < maxRecite / 10 + 1; i++) {
+                markYs.add(height - sheetPadding - yMarkLength * (i + 1));
+            }
+            t = false;
+        }
 
+        for (int i = 0; i < dates.length; i++) {
+            xs[i] = sheetPadding + (i + 1) * xUnitLength;
+            ys[i] = reciteNums[i] * yUnitLength;
+        }
+
+        //draw reciteNums
+        for (int i = 0; i < dates.length; i++) {
+            recitePath.moveTo(xs[i], height - sheetPadding);
+            recitePath.rLineTo(0, -ys[i]);
+            Log.e(TAG, "onDraw: ys0:" + ys[0] );
+            //draw date
+            canvas.drawText(dates[i], xs[i] - dateWidth / 2, height - sheetPadding + dateWidth, yellowPaint);
+        }
+        canvas.drawPath(recitePath, redPaint);
+
+        //draw x and y axis
+        axisPath.moveTo(sheetPadding, sheetPadding);
+        axisPath.lineTo(sheetPadding, height - sheetPadding);
+        axisPath.lineTo(width - sheetPadding, height - sheetPadding);
+        canvas.drawPath(axisPath, linePaint);
+
+        //draw mark on Y axis
+        for (int i = 0; i < markYs.size(); i++) {
+            canvas.drawLine(sheetPadding, markYs.get(i), sheetPadding + 10, markYs.get(i), linePaint);
+            canvas.drawText(10 * (i + 1) + "", sheetPadding - dateWidth - 10, markYs.get(i), yellowPaint);
+        }
+    }
+
+    public void setDates(String[] dates) {
+        this.dates = dates;
+    }
+
+    public void setSearchNums(int[] searchNums) {
+        this.searchNums = searchNums;
+    }
+
+    public void setReciteNums(int[] reciteNums1) {
+        this.reciteNums = reciteNums1;
+    }
+
+    public void setEasyNums(int[] easyNums) {
+        this.easyNums = easyNums;
+    }
+
+    private int findMaxRecite(int[] reciteArray) {
+        int max = 0;
+        for (int i : reciteArray) {
+            if (i > max) {
+                max = i;
+            }
+        }
+        Log.e(TAG, "findMaxRecite: " + max);
+        return max;
+    }
+
+    public void startAnim() {
+        int[] ress = reciteNums;
+        ValueAnimator animator = ValueAnimator.ofFloat(0, 1);
+        animator.setDuration(5000);
+        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+//                for (int i = 0; i < ress.length; i++) {
+//                    reciteNums[i] = (int)(ress[i] * (float)animation.getAnimatedValue());
+//                }
+                Log.e(TAG, "paix******" + (int)(ress[0] * (float)animation.getAnimatedValue()));
+                reciteNums[0] = (int)(ress[0] * (float)animation.getAnimatedValue());
+//                reciteNums[1] = (int)(ress[1] * (float)animation.getAnimatedValue());
+//                reciteNums[2] = (int)(ress[2] * (float)animation.getAnimatedValue());
+//                reciteNums[3] = (int)(ress[3] * (float)animation.getAnimatedValue());
+//                reciteNums[4] = (int)(ress[4] * (float)animation.getAnimatedValue());
+//                reciteNums[5] = (int)(ress[5] * (float)animation.getAnimatedValue());
+//                reciteNums[6] = (int)(ress[6] * (float)animation.getAnimatedValue());
+
+            }
+        });
+        animator.start();
     }
 }
