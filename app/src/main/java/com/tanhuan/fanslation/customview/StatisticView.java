@@ -31,11 +31,11 @@ public class StatisticView extends View {
     //data
     String[] dates = new String[7];
     int[] searchNums = new int[7];
-    int[] reciteNums = new int[7];
+    float[] reciteNums = new float[7];
     int[] easyNums = new int[7];
     int[] ress;
 
-    int maxRecite;
+    float maxRecite;
 
     //the path to draw recite lines
     Path recitePath;
@@ -98,7 +98,7 @@ public class StatisticView extends View {
         yellowPaint.setTextSize(40);
         //test data
         setDates(new String[]{"16", "17", "18", "19", "20", "21", "22"});
-        setReciteNums(new int[]{20, 10, 20, 45, 2, 19, 20});
+        setReciteNums(new float[]{20, 10, 20, 45, 2, 19, 20});
         ress = new int[]{20, 10, 20, 45, 2, 19, 20};
 
         //find max num in reciteNums to determine Y
@@ -120,13 +120,17 @@ public class StatisticView extends View {
 //                reciteNums[0] = 50;
                 invalidate();
                 Log.e(TAG, "paix>>>>>>>" + reciteNums[0]);
-                reciteNums[0] = (int)(ress[0] * (float)animation.getAnimatedValue());
-                reciteNums[1] = (int)(ress[1] * (float)animation.getAnimatedValue());
-                reciteNums[2] = (int)(ress[2] * (float)animation.getAnimatedValue());
-                reciteNums[3] = (int)(ress[3] * (float)animation.getAnimatedValue());
-                reciteNums[4] = (int)(ress[4] * (float)animation.getAnimatedValue());
-                reciteNums[5] = (int)(ress[5] * (float)animation.getAnimatedValue());
-                reciteNums[6] = (int)(ress[6] * (float)animation.getAnimatedValue());
+
+                for (int i = 0; i < reciteNums.length; i++) {
+                    reciteNums[i] = ress[i] * (float)animation.getAnimatedValue();
+                }
+//                reciteNums[0] = ress[0] * (float)animation.getAnimatedValue();
+//                reciteNums[1] = ress[1] * (float)animation.getAnimatedValue();
+//                reciteNums[2] = ress[2] * (float)animation.getAnimatedValue();
+//                reciteNums[3] = ress[3] * (float)animation.getAnimatedValue();
+//                reciteNums[4] = ress[4] * (float)animation.getAnimatedValue();
+//                reciteNums[5] = ress[5] * (float)animation.getAnimatedValue();
+//                reciteNums[6] = ress[6] * (float)animation.getAnimatedValue();
 
             }
         });
@@ -202,7 +206,7 @@ public class StatisticView extends View {
         this.searchNums = searchNums;
     }
 
-    public void setReciteNums(int[] reciteNums1) {
+    public void setReciteNums(float[] reciteNums1) {
         this.reciteNums = reciteNums1;
     }
 
@@ -210,9 +214,9 @@ public class StatisticView extends View {
         this.easyNums = easyNums;
     }
 
-    private int findMaxRecite(int[] reciteArray) {
-        int max = 0;
-        for (int i : reciteArray) {
+    private float findMaxRecite(float[] reciteArray) {
+        float max = 0;
+        for (float i : reciteArray) {
             if (i > max) {
                 max = i;
             }
