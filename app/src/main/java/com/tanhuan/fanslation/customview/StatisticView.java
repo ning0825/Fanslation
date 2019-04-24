@@ -162,9 +162,10 @@ public class StatisticView extends View {
         super.onDraw(canvas);
 
         if (t) {
-            for (int i = 0; i < maxRecite / 10 + 1; i++) {
+            for (int i = 0; i < maxRecite / 10; i++) {
                 markYs.add(height - sheetPadding - yMarkLength * (i + 1));
             }
+            Log.e(TAG, "onDraw: " + "narkYs.size: " + markYs.size() + "maxRecite: " + maxRecite);
             t = false;
         }
 
@@ -178,11 +179,11 @@ public class StatisticView extends View {
         for (int i = 0; i < dates.length; i++) {
             recitePath.moveTo(xs[i], height - sheetPadding);
             recitePath.rLineTo(0, -ys[i]);
-            Log.e(TAG, "onDraw: ys0:" + ys[0] );
+//            Log.e(TAG, "onDraw: ys0:" + ys[0] );
             //draw date
             canvas.drawText(dates[i], xs[i] - dateWidth / 2, height - sheetPadding + dateWidth, yellowPaint);
         }
-        Log.e(TAG, "onDraw: ys0:" + ys[0]);
+//        Log.e(TAG, "onDraw: ys0:" + ys[0]);
         canvas.drawPath(recitePath, redPaint);
 
         //draw x and y axis

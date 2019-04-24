@@ -1,5 +1,7 @@
 package com.tanhuan.fanslation.entity;
 
+import com.tanhuan.fanslation.util.ViewUtil;
+
 import java.util.Date;
 
 import io.objectbox.annotation.Entity;
@@ -15,7 +17,7 @@ public class ParaEntity {
     //音标
     String phone;
     //考试类型
-    String examType;
+    public String examType;
     //翻译
     String trans;
     //例句
@@ -24,21 +26,22 @@ public class ParaEntity {
     int remeberCount;
     //note
     String note;
-    //data
-    Date date;
+    //date
+    String date;
 
     ToOne<BookEntity> toOneBookEntity;
 
     public ParaEntity() {}
 
-    public ParaEntity(String input, String phone, String examType, String trans, String sentences, int count) {
+    public ParaEntity(String input, String phone, String examType, String trans, String sentences) {
         this.input = input;
         this.phone = phone;
         this.examType = examType;
         this.trans = trans;
         this.sentences = sentences;
-        this.remeberCount = count;
-        note = "";
+        this.remeberCount = 1;
+        this.note = "";
+        this.date = ViewUtil.getDate();
     }
 
     public String getInput() {

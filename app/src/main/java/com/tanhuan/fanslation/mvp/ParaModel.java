@@ -7,8 +7,14 @@ import com.google.gson.Gson;
 import com.tanhuan.fanslation.BaseApp;
 import com.tanhuan.fanslation.bean.ParaBean;
 import com.tanhuan.fanslation.entity.BookEntity;
+import com.tanhuan.fanslation.entity.DataEntity;
+import com.tanhuan.fanslation.entity.DataEntity_;
 import com.tanhuan.fanslation.entity.ParaEntity;
 import com.tanhuan.fanslation.util.HttpUtil;
+import com.tanhuan.fanslation.util.ViewUtil;
+
+import java.util.Date;
+import java.util.List;
 
 import io.objectbox.Box;
 import io.objectbox.BoxStore;
@@ -21,6 +27,7 @@ public class ParaModel implements IModel<ParaBean> {
     Gson gson = new Gson();
     BoxStore store = BaseApp.getBoxStore();
     Box<BookEntity> bookBox = store.boxFor(BookEntity.class);
+    Box<DataEntity> dataBox = store.boxFor(DataEntity.class);
     private static final String TAG = "ParaModel";
 
     @Override
@@ -78,10 +85,21 @@ public class ParaModel implements IModel<ParaBean> {
         senCn = sbCn.toString();
         sentences = senEn + "*" + senCn;
 
-        ParaEntity paraEntity = new ParaEntity(input, phone, examType,trans, sentences, 1);
+        ParaEntity paraEntity = new ParaEntity(input, phone, examType,trans, sentences);
         BookEntity bookEntity = bookBox.get(whichBook);
         bookEntity.toManyTransEntities.add(paraEntity);
         bookBox.put(bookEntity);
+
+        List<DataEntity> datas = dataBox.query().equal(DataEntity_.date, ViewUtil.getDate()).build().find();
+        if (datas.size() == 0) {
+            DataEntity dataEntity = new DataEntity(ViewUtil.getDate());
+            dataEntity.setSearchNum(1);
+            dataBox.put(dataEntity);
+        } else {
+            DataEntity dataEntity = datas.get(0);
+            dataEntity.setSearchNum(dataEntity.getSearchNum() + 1);
+            dataBox.put(dataEntity);
+        }
         callback.onResult(0);
     }
 }

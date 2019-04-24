@@ -248,6 +248,12 @@ public class MainActivity extends AppCompatActivity implements IView<ImageBean> 
 
                 case R.id.tv_statistic:
                     startActivity(new Intent(MainActivity.this, StatisticActivity.class));
+                    bgMenuAnimator.reverse();
+                    clWidAnimator.reverse();
+                    clHeiAnimator.reverse();
+                    clMenuAnimator.reverse();
+                    btMenu.setChecked(false);
+                    break;
                 default:
                     break;
             }
@@ -271,4 +277,17 @@ public class MainActivity extends AppCompatActivity implements IView<ImageBean> 
         imagePresenter.detachView();
     }
 
+    @Override
+    public void onBackPressed() {
+        if (btMenu.checked) {
+            bgMenuAnimator.reverse();
+            clWidAnimator.reverse();
+            clHeiAnimator.reverse();
+            clMenuAnimator.reverse();
+            btMenu.setChecked(false);
+        } else {
+            super.onBackPressed();
+        }
+
+    }
 }

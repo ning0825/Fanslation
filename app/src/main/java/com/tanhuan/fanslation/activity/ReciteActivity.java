@@ -21,6 +21,8 @@ import com.tanhuan.fanslation.BaseApp;
 import com.tanhuan.fanslation.R;
 import com.tanhuan.fanslation.customview.UnrollViewPager;
 import com.tanhuan.fanslation.entity.BookEntity;
+import com.tanhuan.fanslation.entity.DataEntity;
+import com.tanhuan.fanslation.entity.DataEntity_;
 import com.tanhuan.fanslation.entity.ParaEntity;
 import com.tanhuan.fanslation.util.ViewUtil;
 
@@ -39,6 +41,12 @@ public class ReciteActivity extends AppCompatActivity implements View.OnClickLis
     List<ParaEntity> initParas;
     List<ParaEntity> maskParas;
     ParaEntity currentPara;
+
+    Box<DataEntity> dataBox;
+    DataEntity dataEntity;
+    List<DataEntity> datas;
+
+    Box<ParaEntity> paraBox;
 
     List<View> views;
 
@@ -68,6 +76,17 @@ public class ReciteActivity extends AppCompatActivity implements View.OnClickLis
         bookEntity = bookBox.get(whichBook);
         initParas = bookEntity.toManyTransEntities;
         maskParas = getMaskPara(initParas);
+
+        dataBox = BaseApp.getBoxStore().boxFor(DataEntity.class);
+        datas = dataBox.query().equal(DataEntity_.date, ViewUtil.getDate()).build().find();
+        if (datas.size() == 0) {
+            dataEntity = new DataEntity(ViewUtil.getDate());
+            dataBox.put(dataEntity);
+        } else {
+            dataEntity = datas.get(0);
+        }
+
+        paraBox = BaseApp.getBoxStore().boxFor(ParaEntity.class);
 
 
         //initialize toolbar
@@ -130,16 +149,28 @@ public class ReciteActivity extends AppCompatActivity implements View.OnClickLis
             case R.id.bt_forget:
                 currentPara = maskParas.get(vp.getCurrentItem());
                 currentPara.setRemeberCount(currentPara.getRemeberCount() - 1);
-                break;
-            case R.id.bt_remember:
-                currentPara = maskParas.get(vp.getCurrentItem());
-                currentPara.setRemeberCount(currentPara.getRemeberCount() + 1);
+                paraBox.put(currentPara);
 
                 if (vp.getCurrentItem() == views.size() - 1) {
                     Toast.makeText(this, "complete", Toast.LENGTH_SHORT).show();
                 } else {
                     vp.setCurrentItem(vp.getCurrentItem() + 1, true);
                 }
+
+                dataEntity.setReciteNum(dataEntity.getReciteNum() + 1);
+                break;
+            case R.id.bt_remember:
+                currentPara = maskParas.get(vp.getCurrentItem());
+                currentPara.setRemeberCount(currentPara.getRemeberCount() + 1);
+                paraBox.put(currentPara);
+
+                if (vp.getCurrentItem() == views.size() - 1) {
+                    Toast.makeText(this, "complete", Toast.LENGTH_SHORT).show();
+                } else {
+                    vp.setCurrentItem(vp.getCurrentItem() + 1, true);
+                }
+
+                dataEntity.setReciteNum(dataEntity.getReciteNum() + 1);
                 break;
             default:
                 break;
@@ -174,5 +205,12 @@ public class ReciteActivity extends AppCompatActivity implements View.OnClickLis
         public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
             container.removeView(((View) object));
         }
+
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        dataBox.put(dataEntity);
     }
 }
