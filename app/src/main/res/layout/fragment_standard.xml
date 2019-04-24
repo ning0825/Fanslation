@@ -16,14 +16,14 @@
         android:layout_height="wrap_content"
         android:padding="8dp">
 
-        <ListView
+        <com.tanhuan.fanslation.customview.InScrollListView
             android:id="@+id/lv_trans"
             android:layout_width="match_parent"
             android:layout_margin="8dp"
             android:layout_height="wrap_content"
             android:scrollbarSize="0dp"
             android:divider="@null">
-        </ListView>
+        </com.tanhuan.fanslation.customview.InScrollListView>
 
         <TextView
             android:id="@+id/tv_exam_type"
@@ -42,7 +42,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
-    <ListView
+    <com.tanhuan.fanslation.customview.InScrollListView
         android:id="@+id/lv_sentence"
         app:layout_constraintTop_toBottomOf="@id/head_lv"
         android:layout_width="match_parent"
@@ -53,6 +53,6 @@
         android:layout_marginTop="8dp"
         android:divider="@null"
         android:padding="8dp">
-    </ListView>
+    </com.tanhuan.fanslation.customview.InScrollListView>
 
 </android.support.constraint.ConstraintLayout>

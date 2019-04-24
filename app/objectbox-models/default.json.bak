@@ -137,7 +137,7 @@
     },
     {
       "id": "6:7766838603382512102",
-      "lastPropertyId": "5:8757760701991344474",
+      "lastPropertyId": "6:5130982116218402617",
       "name": "DataEntity",
       "properties": [
         {
@@ -157,8 +157,8 @@
           "name": "reciteNum"
         },
         {
-          "id": "5:8757760701991344474",
-          "name": "rememberNum"
+          "id": "6:5130982116218402617",
+          "name": "easyNum"
         }
       ],
       "relations": []
@@ -177,7 +177,8 @@
   "retiredPropertyUids": [
     8694715341288307261,
     7365485032226774393,
-    2448768737056106639
+    2448768737056106639,
+    8757760701991344474
   ],
   "retiredRelationUids": [],
   "version": 1

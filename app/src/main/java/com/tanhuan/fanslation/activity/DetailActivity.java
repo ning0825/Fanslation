@@ -36,8 +36,8 @@ import java.util.List;
 public class DetailActivity extends AppCompatActivity implements IView<ParaBean> {
     String key;
 
-    TextView tvKey;
-    TextView tvPhone;
+//    TextView tvKey;
+//    TextView tvPhone;
 
     ParaPresenter paraPresenter;
 
@@ -51,14 +51,14 @@ public class DetailActivity extends AppCompatActivity implements IView<ParaBean>
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_detail);
+        setContentView(R.layout.activity_detail2);
 
         tbDetail = findViewById(R.id.tb_detail);
         vpDetail = findViewById(R.id.vp_detail);
 
         paraPresenter = new ParaPresenter(this);
-        tvKey = findViewById(R.id.tv_key);
-        tvPhone = findViewById(R.id.tv_phone);
+//        tvKey = findViewById(R.id.tv_key);
+//        tvPhone = findViewById(R.id.tv_phone);
         toolbarDetail = findViewById(R.id.toolbar_detail);
 
         setSupportActionBar(toolbarDetail);
@@ -103,8 +103,9 @@ public class DetailActivity extends AppCompatActivity implements IView<ParaBean>
 
     @Override
     public void showResult(ParaBean paraBean) {
-        tvKey.setText(paraBean.getInput());
-        tvPhone.setText(paraBean.getEc().getWord().get(0).getUsphone());
+//        tvKey.setText(paraBean.getInput());
+//        tvPhone.setText(paraBean.getEc().getWord().get(0).getUsphone());
+        toolbarDetail.setTitle(paraBean.getInput());
 
         //viewPager init
         Fragment fragment = new StandandFragment();
