@@ -12,11 +12,16 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.tanhuan.fanslation.BaseApp;
 import com.tanhuan.fanslation.R;
 import com.tanhuan.fanslation.bean.ParaBean;
+import com.tanhuan.fanslation.entity.ParaEntity;
+import com.tanhuan.fanslation.entity.ParaEntity_;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import io.objectbox.Box;
 
 public class StandandFragment extends Fragment {
     private final static String TAG = "-----StandardFragment-----";
@@ -30,10 +35,18 @@ public class StandandFragment extends Fragment {
     List<ParaBean.BlngSentsPartBean.SentencepairBean> sentencepairBeans;
     List<String> trans;
 
+    Box<ParaEntity> paraBox;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         paraBean = (ParaBean) getArguments().getSerializable("para");
+
+        paraBox = BaseApp.getBoxStore().boxFor(ParaEntity.class);
+
+        if (paraBox.query().equal(ParaEntity_.input, paraBean.getInput()).build().find().size() > 0) {
+
+        }
     }
 
     @Nullable

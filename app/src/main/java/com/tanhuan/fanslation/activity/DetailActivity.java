@@ -1,9 +1,11 @@
 package com.tanhuan.fanslation.activity;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.MediaPlayer;
+import android.print.PageRange;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
@@ -12,6 +14,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -22,14 +25,18 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.tanhuan.fanslation.BaseApp;
 import com.tanhuan.fanslation.R;
 import com.tanhuan.fanslation.bean.IcibaBean;
 import com.tanhuan.fanslation.bean.ParaBean;
+import com.tanhuan.fanslation.entity.ParaEntity;
+import com.tanhuan.fanslation.entity.ParaEntity_;
 import com.tanhuan.fanslation.mvp.IView;
 import com.tanhuan.fanslation.mvp.ParaPresenter;
 import com.tanhuan.fanslation.util.Constants;
@@ -39,6 +46,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.objectbox.Box;
+
 public class DetailActivity extends AppCompatActivity implements IView<ParaBean> {
     String key;
 
@@ -46,12 +55,15 @@ public class DetailActivity extends AppCompatActivity implements IView<ParaBean>
 
     TextView tvPhone;
     ImageButton ibSpeaker;
+    ImageButton ibNote;
     TabLayout tbDetail;
     ViewPager vpDetail;
     Toolbar toolbarDetail;
     List<Fragment> fragments;
 
     SharedPreferences sp;
+
+    Box<ParaEntity> paraBox;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +74,7 @@ public class DetailActivity extends AppCompatActivity implements IView<ParaBean>
         tbDetail = findViewById(R.id.tb_detail);
         vpDetail = findViewById(R.id.vp_detail);
         ibSpeaker = findViewById(R.id.ib_speaker);
+        ibNote = findViewById(R.id.ib_note);
 
         paraPresenter = new ParaPresenter(this);
         toolbarDetail = findViewById(R.id.toolbar_detail);
@@ -77,6 +90,27 @@ public class DetailActivity extends AppCompatActivity implements IView<ParaBean>
             key = intent.getStringExtra("key");
         }
 
+        paraBox = BaseApp.getBoxStore().boxFor(ParaEntity.class);
+        ibNote.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EditText editText = new EditText(DetailActivity.this);
+                AlertDialog.Builder builder = new AlertDialog.Builder(DetailActivity.this);
+                builder.setTitle("add note")
+                        .setView(editText)
+                        .setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                ParaEntity paraEntity = paraBox.query().equal(ParaEntity_.input, key).build().find().get(0);
+                                paraEntity.setNote(editText.getText().toString());
+                                paraBox.put(paraEntity);
+                            }
+                        })
+                        .show();
+
+
+            }
+        });
 
         paraPresenter.request(key);
     }
