@@ -45,10 +45,11 @@ public class StandandFragment extends Fragment {
         tvExamTypes = view.findViewById(R.id.tv_exam_type);
         lvSentence = view.findViewById(R.id.lv_sentence);
 
-        //todo 以下都应该判空，是吧
         //show sentences
-        sentencepairBeans = paraBean.getBlng_sents_part().getSentencepair();
-        lvSentence.setAdapter(new StcAdapter(getContext(), R.layout.item_sentences, sentencepairBeans));
+        if (paraBean.getBlng_sents_part() != null) {
+            sentencepairBeans = paraBean.getBlng_sents_part().getSentencepair();
+            lvSentence.setAdapter(new StcAdapter(getContext(), R.layout.item_sentences, sentencepairBeans));
+        }
 
         //show exam types
         if (paraBean.getEc().getExam_type() != null) {

@@ -6,6 +6,7 @@ import java.util.Date;
 
 import io.objectbox.annotation.Entity;
 import io.objectbox.annotation.Id;
+import io.objectbox.annotation.Unique;
 import io.objectbox.relation.ToOne;
 
 @Entity
@@ -13,6 +14,7 @@ public class ParaEntity {
     @Id long id;
 
     //查询单词
+    @Unique
     String input;
     //音标
     String phone;
@@ -28,6 +30,8 @@ public class ParaEntity {
     String note;
     //date
     String date;
+    //if recited
+    boolean easy;
 
     ToOne<BookEntity> toOneBookEntity;
 
@@ -42,6 +46,7 @@ public class ParaEntity {
         this.remeberCount = 1;
         this.note = "";
         this.date = ViewUtil.getDate();
+        this.easy = false;
     }
 
     public String getInput() {
@@ -98,5 +103,21 @@ public class ParaEntity {
 
     public void setNote(String note) {
         this.note = note;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public boolean isEasy() {
+        return easy;
+    }
+
+    public void setEasy(boolean easy) {
+        this.easy = easy;
     }
 }

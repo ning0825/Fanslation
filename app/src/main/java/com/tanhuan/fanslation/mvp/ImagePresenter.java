@@ -33,6 +33,10 @@ public class ImagePresenter implements IPresenter {
                 });
     }
 
+    public void save(ImageBean imageBean) {
+        imageModel.saveToBox(imageBean);
+    }
+
     @Override
     public void detachView() {
         view = null;

@@ -7,6 +7,7 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 import com.tanhuan.fanslation.bean.AssocBean;
+import com.tanhuan.fanslation.bean.IcibaBean;
 import com.tanhuan.fanslation.bean.ImageBean;
 import com.tanhuan.fanslation.bean.ParaBean;
 
@@ -23,7 +24,7 @@ public class HttpUtil {
     private static Gson gson = new Gson();
 
     /*
-    * 获取联想*/
+    * get association*/
     public static AssocBean getAssoc(String s) {
         final String url = Constants.ASSOCIATION_URL + s;
         String responseString = okRun(url);
@@ -32,7 +33,7 @@ public class HttpUtil {
     }
 
     /*
-    * 获取释义*/
+    * get paraphrase*/
     public static ParaBean getPara(String s) {
         final String url = Constants.PARAPHRASE_URL + s;
         String responseString = okRun(url);
@@ -41,7 +42,7 @@ public class HttpUtil {
     }
 
     /*
-    * 每日一句*/
+    * get everyday image*/
     public static ImageBean getImage(String data) {
         final String url = Constants.IMAGE_URL + data;
         String responseString = okRun(url);
@@ -50,7 +51,16 @@ public class HttpUtil {
     }
 
     /*
-    请求总方法
+     * get everyday image*/
+    public static IcibaBean getIciba(String data) {
+        final String url = Constants.ICIBA_API + data;
+        String responseString = okRun(url);
+        IcibaBean icibaBean = gson.fromJson(responseString, IcibaBean.class);
+        return icibaBean;
+    }
+
+    /*
+    request method
      */
     private static String okRun(String url) {
         Request request = new Request.Builder()

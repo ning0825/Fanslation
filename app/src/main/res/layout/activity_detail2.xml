@@ -12,16 +12,40 @@
         <android.support.design.widget.CollapsingToolbarLayout
             android:layout_width="match_parent"
             android:layout_height="150dp"
+            app:expandedTitleGravity="center|left"
+            app:expandedTitleMarginBottom="10dp"
             android:background="@color/white"
             app:expandedTitleTextAppearance="@style/textstyle"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
+
+            <TextView
+                android:id="@+id/tv_phone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="35dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="10dp"
+                android:layout_gravity="bottom"
+                android:textSize="20sp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_key"/>
+
+            <ImageButton
+                android:id="@+id/ib_speaker"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:background="@drawable/speaker"
+                android:layout_gravity="end|bottom"
+                android:layout_marginEnd="50dp"
+                android:layout_marginBottom="50dp"/>
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar_detail"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 app:layout_collapseMode="pin"
-                app:title="title">
+                app:title="title"
+                android:background="@color/white">
             </android.support.v7.widget.Toolbar>
 
         </android.support.design.widget.CollapsingToolbarLayout>

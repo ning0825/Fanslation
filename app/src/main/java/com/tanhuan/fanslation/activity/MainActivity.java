@@ -29,6 +29,8 @@ import com.tanhuan.fanslation.customview.MtoCView;
 import com.tanhuan.fanslation.R;
 import com.tanhuan.fanslation.bean.ImageBean;
 import com.tanhuan.fanslation.entity.BookEntity;
+import com.tanhuan.fanslation.entity.ImageEntity;
+import com.tanhuan.fanslation.entity.ImageEntity_;
 import com.tanhuan.fanslation.entity.UserEntity;
 import com.tanhuan.fanslation.mvp.IView;
 import com.tanhuan.fanslation.mvp.ImagePresenter;
@@ -38,6 +40,7 @@ import com.tanhuan.fanslation.util.ViewUtil;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import io.objectbox.Box;
@@ -79,6 +82,7 @@ public class MainActivity extends AppCompatActivity implements IView<ImageBean> 
     //每日一句
     TextView tvImageEn;
     TextView tvImageCn;
+    Box<ImageEntity> imageBox;
 
     BoxStore store;
     Box<BookEntity> bookBox;
@@ -117,17 +121,18 @@ public class MainActivity extends AppCompatActivity implements IView<ImageBean> 
 
         imagePresenter = new ImagePresenter(this);
 
-        if (HttpUtil.isConnected(this)) {
-            getImage();
-        } else {
+        if (!HttpUtil.isConnected(this)) {
             Snackbar.make(clMain, "no network", Snackbar.LENGTH_SHORT).show();
         }
+
+        getImage();
     }
 
     private void boxInit() {
         store = BaseApp.getBoxStore();
         bookBox = store.boxFor(BookEntity.class);
         userBox = store.boxFor(UserEntity.class);
+        imageBox = store.boxFor(ImageEntity.class);
 
         //add a book if bookBox is empty, when you first install this app.
         if (bookBox.isEmpty()) {
@@ -147,14 +152,21 @@ public class MainActivity extends AppCompatActivity implements IView<ImageBean> 
     private void getImage() {
         SimpleDateFormat sdf = new SimpleDateFormat("YYYY-MM-dd", Locale.CHINA);
         String date = sdf.format(new Date());
-        Log.e(TAG, "getImage: " + date);
-        imagePresenter.request(date);
+
+        List<ImageEntity> images = imageBox.query().equal(ImageEntity_.dateline, date).build().find();
+
+        if (images.size() > 0) {
+            tvImageEn.setText(images.get(0).getContent());
+            tvImageCn.setText(images.get(0).getNote());
+        } else if (HttpUtil.isConnected(this)){
+            imagePresenter.request(date);
+        }
     }
 
     int heightCl;
 
     private void animatorInit() {
-        //todo measure clDialog's height
+        //measure clDialog's height
         clDialog.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
         heightCl = clDialog.getMeasuredHeight();
 
@@ -216,10 +228,7 @@ public class MainActivity extends AppCompatActivity implements IView<ImageBean> 
                 case R.id.bt_menu:
                     Log.e("btmenu", "onClick: " + v.getId());
                     if (!btMenu.checked) {
-                        bgMenuAnimator.reverse();
-                        clWidAnimator.reverse();
-                        clHeiAnimator.reverse();
-                        clMenuAnimator.reverse();
+                        reverseAnim();
                     } else {
                         clWidAnimator.start();
                         clHeiAnimator.start();
@@ -233,10 +242,7 @@ public class MainActivity extends AppCompatActivity implements IView<ImageBean> 
                     etInput.startAnimation(animation);
                     break;
                 case R.id.bg_meau:
-                    bgMenuAnimator.reverse();
-                    clWidAnimator.reverse();
-                    clHeiAnimator.reverse();
-                    clMenuAnimator.reverse();
+                    reverseAnim();
                     btMenu.setChecked(false);
                     break;
                 case R.id.tv_book:
@@ -245,13 +251,9 @@ public class MainActivity extends AppCompatActivity implements IView<ImageBean> 
                 case R.id.bt_recite:
                     startActivity(new Intent(MainActivity.this, ReciteActivity.class));
                     break;
-
                 case R.id.tv_statistic:
                     startActivity(new Intent(MainActivity.this, StatisticActivity.class));
-                    bgMenuAnimator.reverse();
-                    clWidAnimator.reverse();
-                    clHeiAnimator.reverse();
-                    clMenuAnimator.reverse();
+                    reverseAnim();
                     btMenu.setChecked(false);
                     break;
                 default:
@@ -260,10 +262,18 @@ public class MainActivity extends AppCompatActivity implements IView<ImageBean> 
         }
     }
 
+    private void reverseAnim() {
+        bgMenuAnimator.reverse();
+        clWidAnimator.reverse();
+        clHeiAnimator.reverse();
+        clMenuAnimator.reverse();
+    }
+
     @Override
     public void showResult(ImageBean imageBean) {
         tvImageEn.setText(imageBean.getContent());
         tvImageCn.setText(imageBean.getNote());
+        imagePresenter.save(imageBean);
     }
 
     @Override

@@ -90,6 +90,7 @@ public class ParaModel implements IModel<ParaBean> {
         bookEntity.toManyTransEntities.add(paraEntity);
         bookBox.put(bookEntity);
 
+
         List<DataEntity> datas = dataBox.query().equal(DataEntity_.date, ViewUtil.getDate()).build().find();
         if (datas.size() == 0) {
             DataEntity dataEntity = new DataEntity(ViewUtil.getDate());

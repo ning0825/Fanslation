@@ -2,9 +2,11 @@ package com.tanhuan.fanslation.activity;
 
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.v4.view.PagerAdapter;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -27,6 +29,7 @@ import com.tanhuan.fanslation.entity.ParaEntity;
 import com.tanhuan.fanslation.util.ViewUtil;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import io.objectbox.Box;
@@ -55,13 +58,12 @@ public class ReciteActivity extends AppCompatActivity implements View.OnClickLis
     MyAdapter myAdapter;
     Button btForget;
     Button btRemember;
+    Button btEasy;
     ActionBar actionBar;
 
     Gson gson;
 
-    //rememberCount 小于 level 的单词会显示
-    int level = 5;
-
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,8 +71,10 @@ public class ReciteActivity extends AppCompatActivity implements View.OnClickLis
 
         btForget = findViewById(R.id.bt_forget);
         btRemember = findViewById(R.id.bt_remember);
+        btEasy = findViewById(R.id.bt_easy);
         btForget.setOnClickListener(this);
         btRemember.setOnClickListener(this);
+        btEasy.setOnClickListener(this);
 
         bookBox = BaseApp.getBoxStore().boxFor(BookEntity.class);
         bookEntity = bookBox.get(whichBook);
@@ -129,15 +133,27 @@ public class ReciteActivity extends AppCompatActivity implements View.OnClickLis
         });
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     private List<ParaEntity> getMaskPara(List<ParaEntity> paraEntities) {
         List<ParaEntity> pes = new ArrayList<>();
 
+        //exclude easy para
         for (ParaEntity para : paraEntities) {
-            //todo 思考一番显示哪些单词
-            if (para.getRemeberCount() < level) {
+            if (!para.isEasy()) {
                 pes.add(para);
             }
         }
+        // sort ParaEntity from smallest remember count to largest
+        pes.sort(new Comparator<ParaEntity>() {
+            @Override
+            public int compare(ParaEntity o1, ParaEntity o2) {
+                if (o1.getRemeberCount() > o2.getRemeberCount()) {
+                    return 1;
+                } else {
+                    return -1;
+                }
+            }
+        });
 
         return pes;
     }
@@ -172,6 +188,18 @@ public class ReciteActivity extends AppCompatActivity implements View.OnClickLis
 
                 dataEntity.setReciteNum(dataEntity.getReciteNum() + 1);
                 break;
+            case R.id.bt_easy:
+                currentPara = maskParas.get(vp.getCurrentItem());
+                currentPara.setEasy(true);
+                paraBox.put(currentPara);
+
+                if (vp.getCurrentItem() == views.size() - 1) {
+                    Toast.makeText(this, "complete", Toast.LENGTH_SHORT).show();
+                } else {
+                    vp.setCurrentItem(vp.getCurrentItem() + 1, true);
+                }
+
+                dataEntity.setEasyNum(dataEntity.getEasyNum() + 1);
             default:
                 break;
         }
