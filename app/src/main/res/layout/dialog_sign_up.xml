@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="30dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <TextView
+        android:id="@+id/tv_sign_up_title"
+        android:text="sign up"
+        style="@style/textstyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"/>
+
+    <EditText
+        android:id="@+id/et_up_user_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:hint="user name"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_sign_up_title"/>
+
+    <EditText
+        android:id="@+id/et_up_phone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="12"
+        android:hint="phone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/et_up_user_name"/>
+
+    <EditText
+        android:id="@+id/et_up_password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="12"
+        android:hint="password"
+        android:inputType="textPassword"
+        app:layout_constraintTop_toBottomOf="@id/et_up_phone"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <EditText
+        android:id="@+id/et_up_code"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:ems="12"
+        android:hint="code"
+        android:inputType="textPassword"
+        app:layout_constraintTop_toBottomOf="@id/et_up_password"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <Button
+        android:id="@+id/bt_send_code"
+        android:text="send"
+        android:background="@drawable/bg_bt_send"
+        android:textAllCaps="false"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintVertical_chainStyle="packed"
+        app:layout_constraintTop_toTopOf="@id/et_up_code"
+        app:layout_constraintBottom_toBottomOf="@id/et_up_code"/>
+
+    <Button
+        android:id="@+id/bt_sign_up"
+        android:text="sign up"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/bg_bt_send"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/et_up_code"/>
+
+</android.support.constraint.ConstraintLayout>

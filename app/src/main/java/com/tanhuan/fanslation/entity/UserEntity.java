@@ -18,6 +18,8 @@ public class UserEntity {
 
     private String phone;
 
+    private String objectId;
+
     @Backlink
     public ToMany<BookEntity> toManyBookEntities;
 
@@ -50,5 +52,13 @@ public class UserEntity {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public String getObjectId() {
+        return objectId;
+    }
+
+    public void setObjectId(String objectId) {
+        this.objectId = objectId;
     }
 }

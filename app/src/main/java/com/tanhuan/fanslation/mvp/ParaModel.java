@@ -10,6 +10,7 @@ import com.tanhuan.fanslation.entity.BookEntity;
 import com.tanhuan.fanslation.entity.DataEntity;
 import com.tanhuan.fanslation.entity.DataEntity_;
 import com.tanhuan.fanslation.entity.ParaEntity;
+import com.tanhuan.fanslation.entity.UserEntity;
 import com.tanhuan.fanslation.util.HttpUtil;
 import com.tanhuan.fanslation.util.ViewUtil;
 
@@ -28,6 +29,7 @@ public class ParaModel implements IModel<ParaBean> {
     BoxStore store = BaseApp.getBoxStore();
     Box<BookEntity> bookBox = store.boxFor(BookEntity.class);
     Box<DataEntity> dataBox = store.boxFor(DataEntity.class);
+    Box<UserEntity> userBox = store.boxFor(UserEntity.class);
     private static final String TAG = "ParaModel";
 
     @Override

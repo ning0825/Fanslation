@@ -12,7 +12,11 @@ public class Constants {
 
     //sharedPreferenceName
     public static final String SP_NAME = "spName";
+    public static final String SP_DEFAULT_USER_ID_KEY = "defaultUserId";
+    public static final String SP_CURRENT_USER_ID_KEY = "currentUserId";
     public static final String SP_DEFAULT_BOOK_ID_KEY = "defaultBook";
+    public static final String SP_CURRENT_BOOK_ID_KEY = "currentBook";
+    public static final String SP_USER_CLOUD_KEY = "userCloudId";
 
     //unsplash Key
 //    public static final String UNSPLASH_ACCESS_KEY = "0166838389a0ca6b4a2c57bcbb56ecf0b8dfe38fe09e929798c74262cef014de";

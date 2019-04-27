@@ -25,6 +25,8 @@ import com.tanhuan.fanslation.customview.InScrollListView;
 import com.tanhuan.fanslation.R;
 import com.tanhuan.fanslation.entity.BookEntity;
 import com.tanhuan.fanslation.entity.ParaEntity;
+import com.tanhuan.fanslation.entity.UserEntity;
+import com.tanhuan.fanslation.util.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +42,7 @@ public class BookActivity extends AppCompatActivity {
     Box<ParaEntity> paraBox;
     BookEntity bookEntity;
 
-    int bookIndex;
+    long bookIndex;
     InScrollListView lvbook;
     List<ParaEntity> transList;
 
@@ -65,9 +67,9 @@ public class BookActivity extends AppCompatActivity {
 
         lvbook = findViewById(R.id.lv_book);
 
-        //获取到单词书id并显示书中单词
-//        bookIndex = getIntent().getIntExtra("bookId", 1);
-        bookEntity = bookBox.get(1);
+        //whick book
+        bookIndex = getIntent().getLongExtra("bookId", 1);
+        bookEntity = bookBox.get(bookIndex);
         Log.e(TAG, "onCreate: " + bookEntity.bookName );
         getSupportActionBar().setTitle(bookEntity.getBookName());
         transList = new ArrayList<>();

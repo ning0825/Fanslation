@@ -2,6 +2,8 @@ package com.tanhuan.fanslation.activity;
 
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -26,6 +28,7 @@ import com.tanhuan.fanslation.entity.BookEntity;
 import com.tanhuan.fanslation.entity.DataEntity;
 import com.tanhuan.fanslation.entity.DataEntity_;
 import com.tanhuan.fanslation.entity.ParaEntity;
+import com.tanhuan.fanslation.util.Constants;
 import com.tanhuan.fanslation.util.ViewUtil;
 
 import java.util.ArrayList;
@@ -37,7 +40,7 @@ import io.objectbox.Box;
 public class ReciteActivity extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = "----ReciteActivity----";
 
-    int whichBook = 1;
+    long whichBook;
 
     Box<BookEntity> bookBox;
     BookEntity bookEntity;
@@ -77,6 +80,7 @@ public class ReciteActivity extends AppCompatActivity implements View.OnClickLis
         btEasy.setOnClickListener(this);
 
         bookBox = BaseApp.getBoxStore().boxFor(BookEntity.class);
+        whichBook = getSharedPreferences(Constants.SP_NAME, Context.MODE_PRIVATE).getLong(Constants.SP_CURRENT_BOOK_ID_KEY, 0);
         bookEntity = bookBox.get(whichBook);
         initParas = bookEntity.toManyTransEntities;
         maskParas = getMaskPara(initParas);
@@ -109,6 +113,12 @@ public class ReciteActivity extends AppCompatActivity implements View.OnClickLis
             View view = getLayoutInflater().inflate(R.layout.item_vp_recite, null);
             ((TextView) view.findViewById(R.id.tv_recite_input)).setText(paraEntity.getInput());
 
+            TextView tvReciteNote = view.findViewById(R.id.tv_recite_note);
+            if (!paraEntity.getNote().equals("")) {
+                tvReciteNote.setVisibility(View.VISIBLE);
+                tvReciteNote.setText(paraEntity.getNote());
+            }
+
             String trans = paraEntity.getTrans();
             ((TextView) view.findViewById(R.id.tv_recite_para)).setText(trans);
 
@@ -119,18 +129,57 @@ public class ReciteActivity extends AppCompatActivity implements View.OnClickLis
         vp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.e("TouchTest", "onClick: " );
-                View view = views.get(vp.getCurrentItem());
-                TextView tvInput = view.findViewById(R.id.tv_recite_input);
-                TextView tvPara = view.findViewById(R.id.tv_recite_para);
-                float paraY = tvPara.getY();
-                ObjectAnimator transInput = ObjectAnimator.ofFloat(tvInput, View.Y, tvInput.getY(), paraY - tvInput.getHeight() - ViewUtil.dp2px(ReciteActivity.this, 20));
-                ObjectAnimator alphaPara = ObjectAnimator.ofFloat(tvPara, View.ALPHA, 1);
-                AnimatorSet set = new AnimatorSet();
-                set.playTogether(transInput, alphaPara);
-                set.start();
+                if (vp.getTouchCount() == 0) {
+                    View view = views.get(vp.getCurrentItem());
+                    if (view.findViewById(R.id.tv_recite_note).getVisibility() == View.GONE) {
+                        TextView tvInput = view.findViewById(R.id.tv_recite_input);
+                        TextView tvPara = view.findViewById(R.id.tv_recite_para);
+                        float paraY = tvPara.getY();
+                        ObjectAnimator transInput = ObjectAnimator.ofFloat(tvInput, View.Y, tvInput.getY(), paraY - tvInput.getHeight() - ViewUtil.dp2px(ReciteActivity.this, 20));
+                        ObjectAnimator alphaPara = ObjectAnimator.ofFloat(tvPara, View.ALPHA, 1);
+                        AnimatorSet set = new AnimatorSet();
+                        set.playTogether(transInput, alphaPara);
+                        set.start();
+
+                        vp.setTouchCount(2);
+                    } else {
+                        TextView tvInput = view.findViewById(R.id.tv_recite_input);
+                        TextView tvNote = view.findViewById(R.id.tv_recite_note);
+                        float noteY = tvNote.getY();
+                        ObjectAnimator transInput = ObjectAnimator.ofFloat(tvInput, View.Y, tvInput.getY(), noteY - tvInput.getHeight() - ViewUtil.dp2px(ReciteActivity.this, 20));
+                        ObjectAnimator alphaPara = ObjectAnimator.ofFloat(tvNote, View.ALPHA, 1);
+                        AnimatorSet set = new AnimatorSet();
+                        set.playTogether(transInput, alphaPara);
+                        set.start();
+
+                        vp.setTouchCount(1);
+                    }
+
+                } else if (vp.getTouchCount() == 1){
+                    View view = views.get(vp.getCurrentItem());
+                    TextView tvInput = view.findViewById(R.id.tv_recite_input);
+                    TextView tvPara = view.findViewById(R.id.tv_recite_para);
+                    TextView tvNote = view.findViewById(R.id.tv_recite_note);
+                    float paraY = tvPara.getY();
+                    ObjectAnimator transInput = ObjectAnimator.ofFloat(tvInput, View.Y, tvInput.getY(), paraY - tvInput.getHeight() - tvNote.getHeight() - 2 * ViewUtil.dp2px(ReciteActivity.this, 20));
+                    ObjectAnimator transNote = ObjectAnimator.ofFloat(tvNote, View.Y, tvNote.getY(), paraY - tvNote.getHeight() - ViewUtil.dp2px(ReciteActivity.this, 20));
+                    ObjectAnimator alphaPara = ObjectAnimator.ofFloat(tvPara, View.ALPHA, 1);
+                    AnimatorSet set = new AnimatorSet();
+                    set.playTogether(transInput, alphaPara,transNote);
+                    set.start();
+
+                    vp.setTouchCount(2);
+                } else if (vp.getTouchCount() == 2) {
+                    toDetailActivity(maskParas.get(vp.getCurrentItem()).getInput());
+                }
             }
         });
+    }
+
+    void toDetailActivity(String key) {
+        Intent intent = new Intent(ReciteActivity.this, DetailActivity.class);
+        intent.putExtra("key", key);
+        startActivity(intent);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -174,6 +223,8 @@ public class ReciteActivity extends AppCompatActivity implements View.OnClickLis
                 }
 
                 dataEntity.setReciteNum(dataEntity.getReciteNum() + 1);
+
+                vp.setTouchCount(0);
                 break;
             case R.id.bt_remember:
                 currentPara = maskParas.get(vp.getCurrentItem());
@@ -187,6 +238,8 @@ public class ReciteActivity extends AppCompatActivity implements View.OnClickLis
                 }
 
                 dataEntity.setReciteNum(dataEntity.getReciteNum() + 1);
+
+                vp.setTouchCount(0);
                 break;
             case R.id.bt_easy:
                 currentPara = maskParas.get(vp.getCurrentItem());
@@ -200,6 +253,8 @@ public class ReciteActivity extends AppCompatActivity implements View.OnClickLis
                 }
 
                 dataEntity.setEasyNum(dataEntity.getEasyNum() + 1);
+
+                vp.setTouchCount(0);
             default:
                 break;
         }

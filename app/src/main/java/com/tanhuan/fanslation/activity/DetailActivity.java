@@ -104,6 +104,8 @@ public class DetailActivity extends AppCompatActivity implements IView<ParaBean>
                                 ParaEntity paraEntity = paraBox.query().equal(ParaEntity_.input, key).build().find().get(0);
                                 paraEntity.setNote(editText.getText().toString());
                                 paraBox.put(paraEntity);
+
+                                paraPresenter.request(key);
                             }
                         })
                         .show();
@@ -199,7 +201,7 @@ public class DetailActivity extends AppCompatActivity implements IView<ParaBean>
     }
 
     void save(ParaBean paraBean) {
-        long bookId = sp.getLong(Constants.SP_DEFAULT_BOOK_ID_KEY, 1);
+        long bookId = sp.getLong(Constants.SP_CURRENT_BOOK_ID_KEY, 0);
         paraPresenter.save(paraBean, bookId,this);
     }
 }

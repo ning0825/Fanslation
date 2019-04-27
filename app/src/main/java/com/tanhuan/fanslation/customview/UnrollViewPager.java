@@ -10,6 +10,8 @@ import android.view.MotionEvent;
 
 public class UnrollViewPager extends ViewPager {
     private static final String TAG = "touchtest";
+    private int touchCount = 0;
+
     public UnrollViewPager(@NonNull Context context) {
         super(context);
     }
@@ -39,5 +41,13 @@ public class UnrollViewPager extends ViewPager {
             performClick();
         }
         return true;
+    }
+
+    public int getTouchCount() {
+        return touchCount;
+    }
+
+    public void setTouchCount(int touchCount) {
+        this.touchCount = touchCount;
     }
 }

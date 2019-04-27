@@ -31,6 +31,7 @@ public class StandandFragment extends Fragment {
     ListView lvTrans;
     TextView tvExamTypes;
     ListView lvSentence;
+    TextView tvNote;
 
     List<ParaBean.BlngSentsPartBean.SentencepairBean> sentencepairBeans;
     List<String> trans;
@@ -43,10 +44,6 @@ public class StandandFragment extends Fragment {
         paraBean = (ParaBean) getArguments().getSerializable("para");
 
         paraBox = BaseApp.getBoxStore().boxFor(ParaEntity.class);
-
-        if (paraBox.query().equal(ParaEntity_.input, paraBean.getInput()).build().find().size() > 0) {
-
-        }
     }
 
     @Nullable
@@ -57,6 +54,13 @@ public class StandandFragment extends Fragment {
         lvTrans = view.findViewById(R.id.lv_trans);
         tvExamTypes = view.findViewById(R.id.tv_exam_type);
         lvSentence = view.findViewById(R.id.lv_sentence);
+        tvNote = view.findViewById(R.id.tv_note);
+
+        ParaEntity paraEntity = paraBox.query().equal(ParaEntity_.input, paraBean.getInput()).build().findFirst();
+        if (paraEntity != null && !paraEntity.getNote().equals("")) {
+            tvNote.setText(paraEntity.getNote());
+            tvNote.setVisibility(View.VISIBLE);
+        }
 
         //show sentences
         if (paraBean.getBlng_sents_part() != null) {
